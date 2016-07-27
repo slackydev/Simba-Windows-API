@@ -1,11 +1,12 @@
 type
-  WinDLL = type Pointer;
-  LibUser32 = type Pointer;
+  WinDLL = type Pointer; 
+  LibUser32 = WinDLL; //meh...
+  LibGdi32  = WinDLL; //
 
-var 
+var
   Windows: WinDLL;
   User32: LibUser32;
-
+  Gdi32: LibGDI32;
 
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
@@ -14,8 +15,8 @@ type
   {$IFNDECL PUInt8}   PUInt8  = ^UInt8;     {$ENDIF}
   
   WINBOOL = LongBool;
-  BOOL = WINBOOL;
-  PBOOL    = ^BOOL;
+  BOOL  = WINBOOL;
+  PBOOL = ^BOOL;
   
   COLORREF  = Int32;
   PCOLORREF = ^COLORREF;
@@ -154,31 +155,40 @@ type
     ptScreenPos: TPoint;
   end;
   
+  TWindowPlacement = record
+    length: UInt32;
+    flags: UInt32;
+    showCmd: UInt32;
+    ptMinPosition: TPoint;
+    ptMaxPosition: TPoint;
+    rcNormalPosition: TRect;
+  end;
+  
   //---| SendInput |----------
   TMouseInput = record
-    Itype: UInt32;
+    Itype: DWord;
     dx: Int32;
     dy: Int32;
-    mouseData: UInt32;
-    dwFlags: UInt32;
-    time: UInt32;
+    mouseData: DWord;
+    dwFlags: DWord;
+    time: DWord;
     dwExtraInfo: PtrUInt;
   end;
   
   TKeybdInput = record
-    Itype: UInt32;
-    wVk: UInt16;
-    wScan: UInt16;
-    dwFlags: UInt32;
-    time: UInt32;
+    Itype: DWord;
+    wVk: Word;
+    wScan: Word;
+    dwFlags: DWord;
+    time: DWord;
     dwExtraInfo: PtrUInt;
   end;
   
   THardwareInput = record
-    Itype: UInt32;
-    uMsg: UInt32;
-    wParamL: UInt16;
-    wParamH: UInt16;
+    Itype: DWord;
+    uMsg: DWord;
+    wParamL: Word;
+    wParamH: Word;
   end;
   
   

@@ -1,0 +1,5 @@
+{$include_once WinTypes.pas}
+{$include_once DC_methods.pas}
+{$include_once IO_methods.pas}
+{$include_once Window_methods.pas}
+
