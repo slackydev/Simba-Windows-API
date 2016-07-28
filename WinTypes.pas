@@ -1,14 +1,21 @@
 type
   WinDLL = type Pointer; 
-  LibUser32  = WinDLL; //meh...
-  LibGdi32   = WinDLL; //
-  LibMsimg32 = WinDLL; // 
-
+  LibUser32   = WinDLL; //meh...
+  LibGdi32    = WinDLL; //
+  LibKernel32 = WinDLL; //  
+  LibMsimg32  = WinDLL; //
+  LibAdvapi32 = WinDLL;
+  LibAvrt     = WinDLL; //
+  
+  
 var
-  Windows: WinDLL;
-  User32: LibUser32;
-  Gdi32: LibGdi32;
-  Msimg32: LibMsimg32
+  Windows:  WinDLL;
+  User32:   LibUser32;
+  Gdi32:    LibGdi32;
+  Kernel32: LibKernel32;
+  Msimg32:  LibMsimg32;
+  Advapi32: LibMsimg32;
+  Avrt:     LibAvrt;
   
   
 type
@@ -203,6 +210,49 @@ type
     ptMaxPosition: TPoint;
     rcNormalPosition: TRect;
   end;
+  
+  // this is actually supposed to be a union, but.. eat shit!
+  PSYSTEM_INFO = ^SYSTEM_INFO;
+  SYSTEM_INFO = record
+    dwOemId: DWord;
+    dwPageSize: DWord;
+    lpMinimumApplicationAddress: Pointer;
+    lpMaximumApplicationAddress: Pointer;
+    dwActiveProcessorMask: PtrUInt;
+    dwNumberOfProcessors: DWord;
+    dwProcessorType: DWord;
+    dwAllocationGranularity: DWord;
+    wProcessorLevel: Word;
+    wProcessorRevision: Word;	
+  end;
+  
+  GROUP_AFFINITY = record
+    Mask: PtrUInt;
+    Group: Word;
+    Reserved0,Reserved1,Reserved2: Word;
+  end;
+  
+  STARTUPINFO = record
+    cb: DWord;
+    lpReserved: LPWSTR;
+    lpDesktop: LPWSTR;
+    lpTitle: LPWSTR;
+    dwX: DWord;
+    dwY: DWord;
+    dwXSize: DWord;
+    dwYSize: DWord;
+    dwXCountChars: DWord;
+    dwYCountChars: DWord;
+    dwFillAttribute: DWord;
+    dwFlags: DWord;
+    wShowWindow: Word;
+    cbReserved2: Word;
+    lpReserved2: ^Byte;
+    hStdInput: HANDLE;
+    hStdOutput: HANDLE;
+    hStdError: HANDLE;
+  end;
+  
   
   //---| SendInput |----------
   TMouseInput = record
