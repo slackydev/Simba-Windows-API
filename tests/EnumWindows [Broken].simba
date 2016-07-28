@@ -1,0 +1,17 @@
+program new;
+{$I Windows/Windows.simba}
+
+// sadface.png :(
+procedure EnumProcesses();
+  function EnumProcess(Handle: HWND; Param: PtrUInt): LongBool; static;
+  begin
+    WriteLn Windows.GetWindowText(Handle);
+  end;
+begin
+  Windows.EnumWindows(@EnumProcess, 0);
+end;
+
+begin
+  EnumProcesses();
+end.
+

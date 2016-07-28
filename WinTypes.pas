@@ -1,13 +1,16 @@
 type
   WinDLL = type Pointer; 
-  LibUser32 = WinDLL; //meh...
-  LibGdi32  = WinDLL; //
+  LibUser32  = WinDLL; //meh...
+  LibGdi32   = WinDLL; //
+  LibMsimg32 = WinDLL; // 
 
 var
   Windows: WinDLL;
   User32: LibUser32;
-  Gdi32: LibGDI32;
-
+  Gdi32: LibGdi32;
+  Msimg32: LibMsimg32
+  
+  
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
   {$IFNDECL PUInt32}  PUInt32 = ^UInt32;    {$ENDIF}
@@ -127,12 +130,49 @@ type
   NWPSTR = ^WideChar;
    
   LPVoid = Pointer; 
-   
+  
+  TBlendFunction = Pointer;  
+  
   _EnumWindowsProc = function(wnd:HWND; Param: LPARAM): BOOL;
   TEnumWindowsProc = native(_EnumWindowsProc, ffi_stdcall); //how dafuq do we use this?
   
-  PRect  = ^TRect;
-
+  PRect = ^TRect;
+  
+  PSizeStruct = ^TSizeStruct;
+  TSizeStruct = record W,H:Int32; end;
+  
+  PBITMAPINFOHEADER = ^BITMAPINFOHEADER;
+  BITMAPINFOHEADER = record
+    biSize: DWord;
+    biWidth: LongInt;
+    biHeight: LongInt;
+    biPlanes: Word;
+    biBitCount: Word;
+    biCompression: DWord;
+    biSizeImage: DWord;
+    biXPelsPerMeter: LongInt;
+    biYPelsPerMeter: LongInt;
+    biClrUsed: DWord;
+    biClrImportant: DWord;
+  end;
+  
+  PBITMAPINFO = ^BITMAPINFO;
+  BITMAPINFO = record
+    bmiHeader: BITMAPINFOHEADER;
+    bmiColors: array[0..0] of TRGB32;
+  end;
+  
+  PBITMAP = ^BITMAP;
+  BITMAP = record
+    bmType: LongInt;
+    bmWidth: LongInt;
+    bmHeight: LongInt;
+    bmWidthBytes: LongInt;
+    bmPlanes: Word;
+    bmBitsPixel: Word;
+    bmBits: Pointer;
+  end;
+  
   PWINDOWINFO = ^WINDOWINFO;
   WINDOWINFO = record
     cbSize: UInt32;
@@ -307,7 +347,79 @@ const
   SM_XVIRTUALSCREEN = 76;
   SM_YVIRTUALSCREEN = 77;
   
+  // Window
+  GW_HWNDFIRST = 0;
+  GW_HWNDLAST = 1;
+  GW_HWNDNEXT = 2;
+  GW_HWNDPREV = 3;
+  GW_OWNER    = 4;
+  GW_CHILD    = 5;
+  GW_ENABLEDPOPUP= 6;
+  GWL_WNDPROC    = -4;
+  GWL_HINSTANCE  = -6;
+  GWL_HWNDPARENT = -8;
+  GWL_ID       = -12;
+  GWL_STYLE    = -16;
+  GWL_EXSTYLE  = -20;
+  GWL_USERDATA = -21;
   
+  WS_OVERLAPPED = 0;
+  WS_POPUP = -2147483648;
+  WS_CHILD = 1073741824;
+  WS_MINIMIZE = 536870912;
+  WS_VISIBLE = 268435456;
+  WS_DISABLED = 134217728;
+  WS_CLIPSIBLINGS = 67108864;
+  WS_CLIPCHILDREN = 33554432;
+  WS_MAXIMIZE = 16777216;
+  WS_CAPTION = 12582912;
+  WS_BORDER = 8388608;
+  WS_DLGFRAME = 4194304;
+  WS_VSCROLL = 2097152;
+  WS_HSCROLL = 1048576;
+  WS_SYSMENU = 524288;
+  WS_THICKFRAME = 262144;
+  WS_GROUP = 131072;
+  WS_TABSTOP = 65536;
+  WS_MINIMIZEBOX = 131072;
+  WS_MAXIMIZEBOX = 65536;
+  WS_TILED = WS_OVERLAPPED;
+  WS_ICONIC = WS_MINIMIZE;
+  WS_SIZEBOX = WS_THICKFRAME;
+  WS_OVERLAPPEDWINDOW = WS_OVERLAPPED or WS_CAPTION or WS_SYSMENU or WS_THICKFRAME or WS_MINIMIZEBOX or WS_MAXIMIZEBOX;
+  WS_POPUPWINDOW = WS_POPUP or WS_BORDER or WS_SYSMENU;
+  WS_CHILDWINDOW = WS_CHILD;
+  WS_TILEDWINDOW = WS_OVERLAPPEDWINDOW;
+  
+  WS_EX_DLGMODALFRAME = 1;
+  WS_EX_NOPARENTNOTIFY = 4;
+  WS_EX_TOPMOST = 8;
+  WS_EX_ACCEPTFILES = 16;
+  WS_EX_TRANSPARENT = 32;
+  WS_EX_MDICHILD = 64;
+  WS_EX_TOOLWINDOW = 128;
+  WS_EX_WINDOWEDGE = 256;
+  WS_EX_CLIENTEDGE = 512;
+  WS_EX_CONTEXTHELP = 1024;
+  WS_EX_RIGHT = 4096;
+  WS_EX_LEFT = 0;
+  WS_EX_RTLREADING = 8192;
+  WS_EX_LTRREADING = 0;
+  WS_EX_LEFTSCROLLBAR = 16384;
+  WS_EX_RIGHTSCROLLBAR = 0;
+  WS_EX_CONTROLPARENT = 65536;
+  WS_EX_STATICEDGE = 131072;
+  WS_EX_APPWINDOW = 262144;
+  WS_EX_OVERLAPPEDWINDOW = (WS_EX_WINDOWEDGE or WS_EX_CLIENTEDGE);
+  WS_EX_PALETTEWINDOW = (WS_EX_WINDOWEDGE or WS_EX_TOOLWINDOW or WS_EX_TOPMOST);
+  WS_EX_LAYERED = $00080000;
+  WS_EX_NOINHERITLAYOUT = $00100000;
+  WS_EX_LAYOUTRTL = $00400000;
+  WS_EX_COMPOSITED = $02000000;
+  WS_EX_NOACTIVATE = $08000000;
+  
+  
+  // mouse
   MOUSEEVENTF_ABSOLUTE  = $8000;
   MOUSEEVENTF_LEFTDOWN  = $0002;
   MOUSEEVENTF_LEFTUP    = $0004;

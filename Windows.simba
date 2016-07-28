@@ -2,4 +2,13 @@
 {$include_once DC_methods.pas}
 {$include_once IO_methods.pas}
 {$include_once Window_methods.pas}
+{$include_once Bitmap_methods.pas}
 
+
+// helper method
+function GetHandle(Str:String): HWND; overload;
+var proc:TSysProc;
+begin
+  for proc in GetProcesses() do
+    if Pos(Str, proc.Title) then Exit(Handle(proc.Handle));
+end;

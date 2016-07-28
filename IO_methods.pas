@@ -1,3 +1,4 @@
+{$include_once WinTypes.pas}
 //--------------------------------------------------------------------------------------------------------------------\\
 //-----| Desktop App UI  >  Windows and Messages  >  Configuration  |-------------------------------------------------||
 //--------------------------------------------------------------------------------------------------------------------//
@@ -194,8 +195,8 @@ function LibUser32.SendInputRaw(nInputs: UInt32; pInputs: Pointer; cbSize: Int32
 function MouseInput(dx,dy:Int32; mouseData, dwFlags:UInt32; time:UInt32=0; dwExtraInfo:PtrUInt=0): TMouseInput;
 begin
   Result.Itype := 0;
-  Result.dx := dx * Round(65536 / User32.GetSystemMetrics(SM_CXSCREEN));
-  Result.dy := dy * Round(65536 / User32.GetSystemMetrics(SM_CYSCREEN));
+  Result.dx := dx;
+  Result.dy := dy;
   Result.MouseData := mouseData;
   Result.dwFlags := dwFlags;
   Result.time := time;
