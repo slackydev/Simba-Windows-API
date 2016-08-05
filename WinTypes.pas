@@ -1,10 +1,10 @@
 type
-  WinDLL = type Pointer; 
-  LibUser32   = WinDLL; //meh...
+  WinDLL      = type Pointer; 
+  LibUser32   = WinDLL; //meh... so it's all accessible through "Windows"
   LibGdi32    = WinDLL; //
-  LibKernel32 = WinDLL; //  
+  LibKernel32 = WinDLL; //
   LibMsimg32  = WinDLL; //
-  LibAdvapi32 = WinDLL;
+  LibAdvapi32 = WinDLL; //
   LibAvrt     = WinDLL; //
   
   
@@ -17,7 +17,7 @@ var
   Advapi32: LibMsimg32;
   Avrt:     LibAvrt;
   
-  
+
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
   {$IFNDECL PUInt32}  PUInt32 = ^UInt32;    {$ENDIF}
@@ -31,6 +31,9 @@ type
   COLORREF  = Int32;
   PCOLORREF = ^COLORREF;
   
+  WINLONG  = Int32;
+  WININT   = Int32;
+  WINSHORT = Int16; 
   (*
   SHORT = Int16;
   WINT  = Int32;
@@ -50,7 +53,7 @@ type
   PULONG_PTR = ^ULONG_PTR;
   PLONG64    = ^Int64;
   
-  DWORDLONG  = UInt64;  { was unsigned long  }
+  DWORDLONG  = UInt64;
   PDWORDLONG = ^DWORDLONG;
   *)
 
@@ -104,7 +107,7 @@ type
   LANGID = UInt16;
   LCID   = UInt32;
   LCTYPE = UInt32;
-  LPARAM = PtrUInt;
+  LPARAM = Pointer;
   
   LPCOLORREF = ^COLORREF;
   LPCSTR  = ^Char;
@@ -141,7 +144,7 @@ type
   TBlendFunction = Pointer;  
   
   _EnumWindowsProc = function(wnd:HWND; Param: LPARAM): BOOL;
-  TEnumWindowsProc = native(_EnumWindowsProc, ffi_stdcall); //how dafuq do we use this?
+  TEnumWindowsProc = native(_EnumWindowsProc, ffi_stdcall);
   
   PRect = ^TRect;
   
@@ -482,3 +485,19 @@ const
   MOUSEEVENTF_XDOWN     = $0080;
   MOUSEEVENTF_XUP       = $0100;
   MOUSEEVENTF_HWHEEL    = $01000;
+
+  SWP_ASYNCWINDOWPOS = $4000;
+  SWP_DEFERERASE     = $2000;
+  SWP_DRAWFRAME      = $0020;
+  SWP_FRAMECHANGED   = $0020;
+  SWP_HIDEWINDOW     = $0080;
+  SWP_NOACTIVATE     = $0010;
+  SWP_NOCOPYBITS     = $0100;
+  SWP_NOMOVE         = $0002;
+  SWP_NOOWNERZORDER  = $0200;
+  SWP_NOREDRAW       = $0008;
+  SWP_NOREPOSITION   = $0200;
+  SWP_NOSENDCHANGING = $0400;
+  SWP_NOSIZE         = $0001;
+  SWP_NOZORDER       = $0004;
+  SWP_SHOWWINDOW     = $0040;

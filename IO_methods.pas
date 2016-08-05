@@ -12,7 +12,7 @@ function LibUser32.GetSystemMetrics(nIndex:Int32): Int32; static; external 'GetS
 
 
 // BOOL WINAPI ClipCursor( _In_opt_const RECT *lpRect);
-//function LibUser32.ClipCursor(): BOOL; static; external 'ClipCursor@user32.dll stdcall';
+//function LibUser32.ClipCursor(lpRect:^TRect): BOOL; static; external 'ClipCursor@user32.dll stdcall';
 
 // HCURSOR WINAPI CopyCursor( _In_HCURSOR pcur);
 function LibUser32.CopyCursor(pcur: HCURSOR): HCURSOR; static; external 'CopyIcon@user32.dll stdcall';
@@ -97,7 +97,7 @@ function LibUser32.GetDoubleClickTime(): UInt32; static; external 'GetDoubleClic
 function LibUser32.GetMouseMovePointsEx(cbSize: UInt32; var pt: TMouseMovePoint; var ptBuf: TMouseMovePoint; nBufPoints: Int32; resolution: UInt32): Int32; static; external 'GetMouseMovePointsEx@user32.dll stdcall';
 
 // VOID WINAPI mouse_event(_In_ DWORD dwFlags, _In_ DWORD dx, _In_ DWORD dy, _In_ DWORD dwData, _In_ ULONG_PTR dwExtraInfo);
-procedure LibUser32.mouse_event(dwFlags: UInt32; dx,dy: DWord; dwData: DWORD; dwExtraInfo: PtrUInt); static; external 'mouse_event@user32.dll stdcall';
+procedure LibUser32.mouse_event(dwFlags: UInt32; dx,dy: DWord; dwData: DWord; dwExtraInfo: PtrUInt); static; external 'mouse_event@user32.dll stdcall';
 
 // BOOL WINAPI ReleaseCapture(void);
 function LibUser32.ReleaseCapture(): BOOL; static; external 'ReleaseCapture@user32.dll stdcall';
@@ -159,13 +159,13 @@ function LibUser32.GetKeyboardState(lpKeyState: ^Byte): BOOL; static; external '
 function LibUser32.GetKeyboardType(nTypeFlag: Int32): Int32; static; external 'GetKeyboardType@user32.dll stdcall';
 
 // int WINAPI GetKeyNameText( _In_LONG lParam, _Out_LPTSTR lpString, _In_int cchSize);
-function LibUser32.GetKeyNameText(lParam: Int32; lpString: LPTSTR; cchSize: Int32): Int32; static; external 'GetKeyNameTextA@user32.dll stdcall';
+function LibUser32.GetKeyNameText(lParam: Int32; lpString: LPWSTR; cchSize: Int32): Int32; static; external 'GetKeyNameTextW@user32.dll stdcall';
 
 // SHORT WINAPI GetKeyState( _In_int nVirtKey);
 function LibUser32.GetKeyState(nVirtKey: Int32): Int16; static; external 'GetKeyState@user32.dll stdcall';
 
 // BOOL WINAPI GetLastInputInfo(_Out_ PLASTINPUTINFO plii);
-//function LibUser32.GetLastInputInfo(plii: ^LASTINPUTINFO): BOOL; static; external 'GetLastInputInfo@user32.dll stdcall';
+//function LibUser32.GetLastInputInfo(out plii: LASTINPUTINFO): BOOL; static; external 'GetLastInputInfo@user32.dll stdcall';
 
 // BOOL WINAPI IsWindowEnabled( _In_HWND hWnd);
 function LibUser32.IsWindowEnabled(Wnd: HWND): BOOL; static; external 'IsWindowEnabled@user32.dll stdcall';
@@ -189,7 +189,7 @@ function LibUser32.OemKeyScan(wOemChar: WORD): DWord; static; external 'OemKeySc
 function LibUser32.RegisterHotKey(Wnd: HWND; id: Int32; fsModifiers: UInt32; vk: UInt32): BOOL; static; external 'RegisterHotKey@user32.dll stdcall';
 
 // UINT WINAPI SendInput( _In_UINT nInputs, _In_LPINPUT pInputs, _In_int cbSize);
-function LibUser32.SendInputRaw(nInputs: UInt32; pInputs: Pointer; cbSize: Int32): UInt32; static; external 'SendInput@user32.dll stdcall';
+function LibUser32.SendInput(nInputs: UInt32; pInputs: Pointer; cbSize: Int32): UInt32; static; external 'SendInput@user32.dll stdcall';
 
 
 function MouseInput(dx,dy:Int32; mouseData, dwFlags:UInt32; time:UInt32=0; dwExtraInfo:PtrUInt=0): TMouseInput;
@@ -225,21 +225,20 @@ end;
 //mouse input
 function LibUser32.SendInput(InputEvents: array of TMouseInput): UInt32; static; overload;
 begin
-  Result := SendInputRaw(Length(InputEvents), @InputEvents[0], SizeOf(TMouseInput));
+  Result := SendInput(Length(InputEvents), @InputEvents[0], SizeOf(TMouseInput));
 end;
 
 //keyboard input
 function LibUser32.SendInput(InputEvents: array of TKeybdInput): UInt32; static; overload;
 begin
-  Result := SendInputRaw(Length(InputEvents), @InputEvents[0], SizeOf(TKeybdInput));
+  Result := SendInput(Length(InputEvents), @InputEvents[0], SizeOf(TKeybdInput));
 end;
 
 //hw input
 function LibUser32.SendInput(InputEvents: array of THardwareInput): UInt32; static; overload;
 begin
-  Result := SendInputRaw(Length(InputEvents), @InputEvents[0], SizeOf(THardwareInput));
+  Result := SendInput(Length(InputEvents), @InputEvents[0], SizeOf(THardwareInput));
 end;
-
 
 // HWND WINAPI SetActiveWindow( _In_HWND hWnd);
 function LibUser32.SetActiveWindow(wnd: HWND): HWND; static; external 'SetActiveWindow@user32.dll stdcall';
@@ -249,20 +248,6 @@ function LibUser32.SetFocus(wnd: HWND): HWND; static; external 'SetFocus@user32.
 
 // BOOL WINAPI SetKeyboardState( _In_LPBYTE lpKeyState);
 function LibUser32.SetKeyboardState(lpKeyState: ^Byte): BOOL; static; external 'SetKeyboardState@user32.dll stdcall';
-
-(*
-// int WINAPI ToAscii( _In_UINT uVirtKey, _In_ UINT uScanCode, _In_opt_ const BYTE *lpKeyState, _Out_ LPWORD lpChar, _In_UINT uFlags);
-function LibUser32.ToAscii(uVirtKey: UInt32; uScanCode: UInt32; ): Int32; static; external 'ToAscii@user32.dll stdcall';
-
-// int WINAPI ToAsciiEx( _In_UINT uVirtKey, _In_ UINT uScanCode, _In_opt_ const BYTE *lpKeyState, _Out_ LPWORD lpChar, _In_UINT uFlags, _In_opt_HKL dwhkl);
-function LibUser32.ToAsciiEx(uVirtKey: UInt32; uScanCode: UInt32; ): Int32; static; external 'ToAsciiEx@user32.dll stdcall';
-
-// int WINAPI ToUnicode( _In_UINT wVirtKey, _In_ UINT wScanCode, _In_opt_ const BYTE *lpKeyState, _Out_ LPWSTR pwszBuff, _In_int cchBuff, _In_UINT wFlags);
-function LibUser32.ToUnicode(wVirtKey: UInt32; wScanCode: UInt32; ): Int32; static; external 'ToUnicode@user32.dll stdcall';
-
-// int WINAPI ToUnicodeEx( _In_UINT wVirtKey, _In_ UINT wScanCode, _In_ const BYTE *lpKeyState, _Out_ LPWSTR pwszBuff, _In_int cchBuff, _In_UINT wFlags, _In_opt_HKL dwhkl);
-function LibUser32.ToUnicodeEx(wVirtKey: UInt32; wScanCode: UInt32; ): Int32; static; external 'ToUnicodeEx@user32.dll stdcall';
-*)
 
 // BOOL WINAPI UnloadKeyboardLayout( _In_HKL hkl);
 function LibUser32.UnloadKeyboardLayout(hkl: HKL): BOOL; static; external 'UnloadKeyboardLayout@user32.dll stdcall';

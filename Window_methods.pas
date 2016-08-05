@@ -4,11 +4,7 @@
 //--------------------------------------------------------------------------------------------------------------------//
 
 // BOOL WINAPI AdjustWindowRect(_Inout_ LPRECT lpRect, _In_ DWORD dwStyle, _In_ BOOL bMenu);
-function LibUser32.AdjustWindowRect(var rect: TRect; dwStyle: DWord; bMenu:Boolean): Boolean; static;
-  function _AdjustWindowRect(lpRect: ^TRect; dwStyle: DWord; bMenu: BOOL): BOOL; external 'AdjustWindowRect@user32.dll stdcall';
-begin
-  Result := _AdjustWindowRect(@rect, dwStyle, bMenu);
-end;
+function LibUser32.AdjustWindowRect(var lpRect: TRect; dwStyle: DWord; bMenu: BOOL): BOOL; static; external 'AdjustWindowRect@user32.dll stdcall';
 
 // BOOL WINAPI AdjustWindowRectEx(_Inout_ LPRECT lpRect, _In_ DWORD dwStyle, _In_ BOOL bMenu, _In_ DWORD dwExStyle);
 function LibUser32.AdjustWindowRectEx(var rect: TRect; dwStyle: DWord; bMenu:Boolean; dwExStyle: DWord): Boolean; static; external 'AdjustWindowRectEx@user32.dll stdcall';
@@ -78,13 +74,13 @@ function LibUser32.EndDeferWindowPos(hWinPosInfo: HDWP): BOOL; static; external 
 function LibUser32.EndTask(wnd: HWND; fShutDown: BOOL; fForce: BOOL): BOOL; static; external 'EndTask@user32.dll stdcall';
 
 // BOOL WINAPI EnumChildWindows( _In_opt_  HWND hWndParent, _In_ WNDENUMPROC lpEnumFunc, _In_ LPARAM lParam);
-function LibUser32.EnumChildWindows(hWndParent: HWND; lpEnumFunc: TEnumWindowsProc; Param: LPARAM): BOOL; static; external 'EnumChildWindows@user32.dll stdcall';
+function LibUser32.EnumChildWindows(hWndParent: HWND; func: TEnumWindowsProc; Param: LPARAM): BOOL; static; external 'EnumChildWindows@user32.dll stdcall';
 
 // BOOL WINAPI EnumThreadWindows( _In_ DWORD dwThreadId, _In_ WNDENUMPROC lpfn, _In_ LPARAM lParam);
-function LibUser32.EnumThreadWindows(dwThreadId: DWord; lpfn: TEnumWindowsProc; Param: LPARAM): BOOL; static; external 'EnumThreadWindows@user32.dll stdcall';
+function LibUser32.EnumThreadWindows(dwThreadId: DWord; func: TEnumWindowsProc; Param: LPARAM): BOOL; static; external 'EnumThreadWindows@user32.dll stdcall';
 
 // BOOL WINAPI EnumWindows( _In_ WNDENUMPROC lpEnumFunc, _In_ LPARAM lParam);
-function LibUser32.EnumWindows(lpEnumFunc: TEnumWindowsProc; Param: LPARAM): BOOL; static; external 'EnumWindows@user32.dll stdcall';
+function LibUser32.EnumWindows(func: TEnumWindowsProc; Param: LPARAM): BOOL; static; external 'EnumWindows@user32.dll stdcall';
 
 // HWND WINAPI FindWindow( _In_opt_  LPCTSTR lpClassName, _In_opt_  LPCTSTR lpWindowName);
 function LibUser32.FindWindowA(lpClassName: LPCTSTR; lpWindowName: LPCTSTR): HWND; static; external 'FindWindowA@user32.dll stdcall';
@@ -176,7 +172,7 @@ function LibUser32.GetWindowText(wnd: HWND): WideString; static;
 type PWideChar = ^WideChar;
 begin
   SetLength(Result, 1024);
-  SetLength(Result, LibUser32.GetWindowTextW(wnd, PWideChar(Result), 1024)); 
+  SetLength(Result, LibUser32.GetWindowTextW(wnd, PWideChar(Result), Length(Result)));
 end;
 
 
@@ -310,3 +306,11 @@ function LibUser32.WindowFromPhysicalPoint(Point: TPoint): HWND; static; externa
 
 // HWND WINAPI WindowFromPoint( _In_ POINT Point);
 function LibUser32.WindowFromPoint(Point: TPoint): HWND; static; external 'WindowFromPoint@user32.dll stdcall';
+
+// LONG WINAPI GetWindowLong( _In_ HWND hWnd, _In_ int nIndex);
+function LibUser32.GetWindowLong(wnd: HWND; nIndex:Int32): WINLONG; static; external 'GetWindowLongW@user32.dll stdcall';
+
+// LONG WINAPI SetWindowLong( _In_ HWND hWnd, _In_ int nIndex; _In_ LONG dwNewLong);
+function LibUser32.SetWindowLong(wnd: HWND; nIndex:Int32; New:WINLONG): WINLONG; static; external 'SetWindowLongW@user32.dll stdcall';
+
+

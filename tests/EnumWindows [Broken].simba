@@ -1,17 +1,79 @@
 program new;
 {$I Windows/Windows.simba}
+{$R+}
 
-// sadface.png :(
-procedure EnumProcesses();
-  function EnumProcess(Handle: HWND; Param: PtrUInt): LongBool; static;
-  begin
-    WriteLn Windows.GetWindowText(Handle);
+type
+  TSysProcEx = record
+    Handle: HWND;
+    PID: DWord;
+    Bounds: TRect;
+    Title: WideString;
   end;
+  TSysProcExArr = array of TSysProcEx;
+
+function IsRealWindow(handle:HWND): Boolean;
+var
+  hasNoOwner:Boolean;
+  lExStyle:UInt32;
 begin
-  Windows.EnumWindows(@EnumProcess, 0);
+  Result := False;
+  if not User32.IsWindowVisible(handle) then
+    Exit(False);
+  if User32.GetParent(handle) <> 0 then
+    Exit(True);
+  hasNoOwner := User32.GetWindow(handle, GW_OWNER) = 0;
+  lExStyle := User32.GetWindowLong(handle, GWL_EXSTYLE);
+  if ((lExStyle and WS_EX_TOOLWINDOW = 0) and hasNoOwner) or
+     ((lExStyle and WS_EX_APPWINDOW <> 0) and (not hasNoOwner)) then
+      if User32.GetWindowText(handle) then
+        Result := True;
 end;
 
+function GetVisibleWindows(): TSysProcExArr;
+type
+  PArguments = ^TArguments;
+  TArguments = record arr:TSysProcExArr; i:Int32; end;
+var
+  args:TArguments;
+
+  function EnumProcess(Handle: HWND; Param: Pointer): LongBool; static;
+  var
+    Res:TArguments := PArguments(Param)^;
+  begin
+    if IsRealWindow(Handle) then
+    begin
+      Res.arr[Res.i].Handle := Handle;
+      Res.arr[Res.i].Bounds := User32.GetWindowRect(Handle);
+      User32.GetWindowThreadProcessId(Handle, Res.arr[Res.i].PID);
+      Res.arr[Res.i].Title := User32.GetWindowText(Handle);
+      Inc(PArguments(Param)^.i);
+    end;
+    Result := PArguments(Param)^.i < $FFFF;
+  end;
 begin
-  EnumProcesses();
+  SetLength(args.arr, $FFFF);
+  Windows.EnumWindows(@EnumProcess, @args);
+  SetLength(args.arr, args.i);
+  Result := args.arr;
+end;
+
+
+function ToString(x:TSysProcEx): String; override;
+begin
+  Result := '[';
+  Result += '$'+IntToHex(x.Handle,8) + ', ' + Format('%.6d',[x.PID]) + ', ';
+  Result += '(';
+  Result += ToString(x.Bounds.Left) + ', ' + ToString(x.Bounds.Top) + ', '
+         +  ToString(x.Bounds.Right) + ', '+ ToString(x.Bounds.Bottom) + '), ';
+  Result += #39 + x.Title + #39;
+  Result += ']';
+end;
+
+var
+  proc:TSysProcEx;
+begin
+  for proc in GetVisibleWindows() do
+    WriteLn(proc);
 end.
+
 
