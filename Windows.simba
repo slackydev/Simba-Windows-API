@@ -1,3 +1,4 @@
+{$IFNDEF WINAPI:DEBUG}{$IFDEF HINTS}{$DEFINE !HAD_HINTS}{$HINTS-}{$ENDIF}{$ENDIF}
 {$include_once WinTypes.pas}
 {$include_once dc_methods.pas}
 {$include_once io_methods.pas}
@@ -7,9 +8,13 @@
 {$include_once process_methods.pas}
 
 // helper method
+{$IFNDECL GetHandle}
 function GetHandle(Str:String): HWND; overload;
 var proc:TSysProc;
 begin
   for proc in GetProcesses() do
     if Pos(Str, proc.Title) then Exit(Handle(proc.Handle));
 end;
+{$ENDIF}
+
+{$IFDEF !HAD_HINTS}{$HINTS+}{$ENDIF}

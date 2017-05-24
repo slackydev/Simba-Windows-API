@@ -274,7 +274,7 @@ function LibUser32.SetWindowTextW(wnd: HWND; lpString: LPCWSTR): BOOL; static; e
 
 function LibUser32.SetWindowText(wnd: HWND; text: WideString): Boolean; static;
 begin
-  SetWindowTextW(wnd, PWideChar(text));
+  Result := SetWindowTextW(wnd, PWideChar(text));
 end;
 
 // BOOL WINAPI ShowOwnedPopups( _In_ HWND hWnd, _In_ BOOL fShow);
