@@ -314,3 +314,16 @@ function LibUser32.GetWindowLong(wnd: HWND; nIndex:Int32): WINLONG; static; exte
 function LibUser32.SetWindowLong(wnd: HWND; nIndex:Int32; New:WINLONG): WINLONG; static; external 'SetWindowLongW@user32.dll' + WINAPI_CC;
 
 
+
+//--------------------------------------------------------------------------------------------------------------------\\
+//-----| Window Classes  >  Window Class Reference  >  Window Class Functions   |-------------------------------------||
+//--------------------------------------------------------------------------------------------------------------------//
+// int WINAPI GetClassName( _In_ HWND hWnd, _Out_LPTSTR lpClassName, _In_ int nMaxCount);
+function LibUser32.GetClassNameA(wnd: HWND; lpClassName: LPCTSTR; nMaxCount: Int32): Int32; static; external 'GetClassNameA@user32.dll' + WINAPI_CC;
+function LibUser32.GetClassNameW(wnd: HWND; lpClassName: LPCWSTR; nMaxCount: Int32): Int32; static; external 'GetClassNameW@user32.dll' + WINAPI_CC;
+
+function LibUser32.GetClassName(wnd: HWND; nMaxCount:Int32 = 1024): WideString; static;
+begin
+  SetLength(Result, nMaxCount);
+  SetLength(Result, LibUser32.GetClassNameW(wnd, PWideChar(Result), nMaxCount));
+end; 

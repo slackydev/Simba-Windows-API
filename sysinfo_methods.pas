@@ -5,12 +5,11 @@
 
 // BOOL WINAPI GetComputerName( _Out_LPTSTR lpBuffer, _Inout_LPDWORD lpnSize); [@Kernel32.dll]
 function LibKernel32.GetComputerName(lpBuffer: LPWSTR; var nSize: DWord): BOOL; static; external 'GetComputerNameW@Kernel32.dll' + WINAPI_CC;
-function LibKernel32.GetComputerName(): WideString; static; overload;
-var size:DWord = 1024;
+function LibKernel32.GetComputerName(nSize: UInt32 = 1024): WideString; static; overload;
 begin
-  SetLength(Result, size);
-  GetComputerName(PWideChar(Result), size);
-  SetLength(Result, size);
+  SetLength(Result, nSize);
+  GetComputerName(PWideChar(Result), nSize);
+  SetLength(Result, nSize);
 end;
 
 // void WINAPI GetNativeSystemInfo( _Out_LPSYSTEM_INFO lpSystemInfo); [@Kernel32.dll]
@@ -21,11 +20,10 @@ function LibKernel32.GetProductInfo(dwOSMajorVersion: DWord; dwOSMinorVersion: D
 
 // UINT WINAPI GetSystemDirectory( _Out_LPTSTR lpBuffer, _In_UINT uSize); [@Kernel32.dll]
 function LibKernel32.GetSystemDirectory(lpBuffer: LPWSTR; uSize: UInt32): UInt32; static; external 'GetSystemDirectoryW@Kernel32.dll' + WINAPI_CC;
-function LibKernel32.GetSystemDirectory(): WideString; static; overload;
-var size:UInt32 = 1024;
+function LibKernel32.GetSystemDirectory(uSize:UInt32 = 1024): WideString; static; overload;
 begin
-  SetLength(Result, size);
-  SetLength(Result, GetSystemDirectory(PWideChar(Result), size));
+  SetLength(Result, uSize);
+  SetLength(Result, GetSystemDirectory(PWideChar(Result), uSize));
 end;
 
 // void WINAPI GetSystemInfo( _Out_LPSYSTEM_INFO lpSystemInfo); [@Kernel32.dll]
@@ -36,30 +34,27 @@ function LibKernel32.GetSystemRegistryQuota(out dwQuotaAllowed: DWord; out dwQuo
 
 // UINT WINAPI GetSystemWindowsDirectory( _Out_LPTSTR lpBuffer, _In_UINT uSize); [@Kernel32.dll]
 function LibKernel32.GetSystemWindowsDirectory(lpBuffer: LPWSTR; uSize: UInt32): UInt32; static; external 'GetSystemWindowsDirectoryW@Kernel32.dll' + WINAPI_CC;
-function LibKernel32.GetSystemWindowsDirectory(): WideString; static; overload;
-var size:UInt32 = 1024;
+function LibKernel32.GetSystemWindowsDirectory(uSize: UInt32 = 1024): WideString; static; overload;
 begin
-  SetLength(Result, size);
-  SetLength(Result, GetSystemWindowsDirectory(PWideChar(Result), size));
+  SetLength(Result, uSize);
+  SetLength(Result, GetSystemWindowsDirectory(PWideChar(Result), uSize));
 end;
 
 // UINT WINAPI GetSystemWow64Directory( _Out_LPTSTR lpBuffer, _In_UINT uSize); [@Kernel32.dll]
 function LibKernel32.GetSystemWow64Directory(lpBuffer: LPWSTR; uSize: UInt32): UInt32; static; external 'GetSystemWow64DirectoryW@Kernel32.dll' + WINAPI_CC;
-function LibKernel32.GetSystemWow64Directory(): WideString; static; overload;
-var size:UInt32 = 1024;
+function LibKernel32.GetSystemWow64Directory(uSize: UInt32 = 1024): WideString; static; overload;
 begin
-  SetLength(Result, size);
-  SetLength(Result, GetSystemWow64Directory(PWideChar(Result), size));
+  SetLength(Result, uSize);
+  SetLength(Result, GetSystemWow64Directory(PWideChar(Result), uSize));
 end;
 
 // BOOL WINAPI GetUserName( _Out_LPTSTR lpBuffer, _Inout_LPDWORD lpnSize); [@Advapi32.dll]
-function LibAdvapi32.GetUserName(lpBuffer: LPWSTR; out nSize: DWord): BOOL; static; external 'GetUserNameW@Advapi32.dll' + WINAPI_CC;
-function LibAdvapi32.GetUserName(): WideString; static; overload;
-var size:DWord = 1024;
+function LibAdvapi32.GetUserName(lpBuffer: LPWSTR; var nSize: DWord): BOOL; static; external 'GetUserNameW@Advapi32.dll' + WINAPI_CC;
+function LibAdvapi32.GetUserName(nSize: UInt32 = 1024): WideString; static; overload;
 begin
-  SetLength(Result, size);
-  GetUserName(PWideChar(Result), size);
-  SetLength(Result, size);
+  SetLength(Result, nSize);
+  GetUserName(PWideChar(Result), nSize);
+  SetLength(Result, nSize);
 end;
 
 
@@ -68,11 +63,10 @@ function LibKernel32.GetVersion(): DWord; static; external 'GetVersion@Kernel32.
 
 // UINT WINAPI GetWindowsDirectory( _Out_LPTSTR lpBuffer, _In_UINT uSize); [@Kernel32.dll]
 function LibKernel32.GetWindowsDirectory(lpBuffer: LPWSTR; uSize: UInt32): UInt32; static; external 'GetWindowsDirectoryW@Kernel32.dll' + WINAPI_CC;
-function LibKernel32.GetWindowsDirectory(): WideString; static; overload;
-var size:UInt32 = 1024;
+function LibKernel32.GetWindowsDirectory(uSize: UInt32 = 1024): WideString; static; overload;
 begin
-  SetLength(Result, size);
-  SetLength(Result, GetWindowsDirectory(PWideChar(Result), size)); 
+  SetLength(Result, uSize);
+  SetLength(Result, GetWindowsDirectory(PWideChar(Result), uSize)); 
 end;
 
 // BOOL WINAPI IsProcessorFeaturePresent( _In_DWORD ProcessorFeature); [@Kernel32.dll]

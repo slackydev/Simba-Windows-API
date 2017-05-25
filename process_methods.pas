@@ -6,7 +6,7 @@
 // VOID WINAPI ExitProcess( _In_UINT uExitCode); [@Kernel32.dll]
 procedure LibKernel32.ExitProcess(uExitCode: UInt32); static; external 'ExitProcess@Kernel32.dll' + WINAPI_CC;
 
-// VOID WINAPI ExitThread( _In_DWORD dwExitCode); [@Kernel32.dll; ]
+// VOID WINAPI ExitThread( _In_DWORD dwExitCode); [@Kernel32.dll]
 procedure LibKernel32.ExitThread(dwExitCode: DWORD); static; external 'ExitThread@Kernel32.dll' + WINAPI_CC;
 
 // VOID WINAPI FlushProcessWriteBuffers(); [@Kernel32.dll]
@@ -105,7 +105,7 @@ function LibKernel32.OpenProcess(dwDesiredAccess: DWORD; bInheritHandle: BOOL; d
 // HANDLE WINAPI OpenThread( _In_DWORD dwDesiredAccess, _In_BOOL bInheritHandle, _In_DWORD dwThreadId); [@Kernel32.dll]
 function LibKernel32.OpenThread(dwDesiredAccess: DWORD; bInheritHandle: BOOL; dwThreadId: DWORD): HANDLE; static; external 'OpenThread@Kernel32.dll' + WINAPI_CC;
 
-// DWORD WINAPI ResumeThread( _In_HANDLE hThread); [@Kernel32.dll; ]
+// DWORD WINAPI ResumeThread( _In_HANDLE hThread); [@Kernel32.dll]
 function LibKernel32.ResumeThread(hThread: HANDLE): DWORD; static; external 'ResumeThread@Kernel32.dll' + WINAPI_CC;
 
 // BOOL WINAPI SetEnvironmentVariable( _In_LPCTSTR lpName, _In_opt_LPCTSTR lpValue); [@Kernel32.dll]
@@ -147,7 +147,7 @@ function LibKernel32.SetThreadPriorityBoost(hThread: HANDLE; DisablePriorityBoos
 // BOOL WINAPI SetThreadStackGuarantee( _Inout_PULONG StackSizeInBytes); [@Kernel32.dll]
 function LibKernel32.SetThreadStackGuarantee(var StackSizeInBytes: UInt32): BOOL; static; external 'SetThreadStackGuarantee@Kernel32.dll' + WINAPI_CC;
 
-// VOID WINAPI Sleep( _In_DWORD dwMilliseconds); [@Kernel32.dll; ]
+// VOID WINAPI Sleep( _In_DWORD dwMilliseconds); [@Kernel32.dll]
 procedure LibKernel32.Sleep(dwMilliseconds: DWORD); static; external 'Sleep@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI SleepEx( _In_DWORD dwMilliseconds, _In_BOOL bAlertable); [@Kernel32.dll]

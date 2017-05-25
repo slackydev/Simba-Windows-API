@@ -50,7 +50,7 @@ end;
 
 // HCURSOR WINAPI LoadCursor( _In_opt_HINSTANCE hInstance, _In_LPCTSTR lpCursorName);
 function LibUser32.LoadCursor(hInstance: HINST; CursorName: WideString): HCURSOR; static;
-  function _LoadCursor(hInstance: HINST; lpCursorName: LPCWSTR): HCURSOR;  external 'LoadCursorW@user32.dll' + WINAPI_CC;
+  function _LoadCursor(hInstance: HINST; lpCursorName: LPCWSTR): HCURSOR; static; external 'LoadCursorW@user32.dll' + WINAPI_CC;
 begin
   Result := _LoadCursor(hInstance, PWideChar(CursorName));
 end;
