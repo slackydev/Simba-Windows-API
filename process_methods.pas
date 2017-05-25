@@ -31,30 +31,41 @@ function LibKernel32.GetCurrentProcess(): HANDLE; static; external 'GetCurrentPr
 function LibKernel32.GetCurrentProcessId(): DWORD; static; external 'GetCurrentProcessId@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetCurrentProcessorNumber(); [@Kernel32.dll]
-function LibKernel32.GetCurrentProcessorNumber(): DWord; static; external 'GetCurrentProcessorNumber@Kernel32.dll' + WINAPI_CC;
+function LibKernel32.GetCurrentProcessorNumber(): DWORD; static; external 'GetCurrentProcessorNumber@Kernel32.dll' + WINAPI_CC;
 
 // HANDLE WINAPI GetCurrentThread(); [@Kernel32.dll]
 function LibKernel32.GetCurrentThread(): HANDLE; static; external 'GetCurrentThread@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetCurrentThreadId(); [@Kernel32.dll]
-function LibKernel32.GetCurrentThreadId(): DWord; static; external 'GetCurrentThreadId@Kernel32.dll' + WINAPI_CC;
+function LibKernel32.GetCurrentThreadId(): DWORD; static; external 'GetCurrentThreadId@Kernel32.dll' + WINAPI_CC;
 
 // LPTCH WINAPI GetEnvironmentStrings(); [@Kernel32.dll]
 function LibKernel32.GetEnvironmentStrings(): LPWCH; static; external 'GetEnvironmentStringsW@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetEnvironmentVariable( _In_opt_LPCTSTR lpName, _Out_opt_LPTSTR lpBuffer, _In_DWORD nSize); [@Kernel32.dll]
-function LibKernel32.GetEnvironmentVariable(lpName: LPCWSTR; lpBuffer: LPWSTR; nSize: DWord): DWord; static; external 'GetEnvironmentVariableW@Kernel32.dll' + WINAPI_CC;
+function LibKernel32.GetEnvironmentVariableW(lpName:LPCWSTR; lpBuffer: LPWSTR; nSize: DWORD): DWORD; static; external 'GetEnvironmentVariableW@Kernel32.dll' + WINAPI_CC;
+function LibKernel32.GetEnvironmentVariable(Name: WideString; nSize: DWORD = 1024): WideString; static;
+begin
+  SetLength(Result, nSize);
+  LibKernel32.GetEnvironmentVariableW(LPCWSTR(Name), LPWSTR(Result), nSize);
+end;
+
+//BOOL WINAPI GetExitCodeProcess( _In_  HANDLE  hThread, _Out_ LPDWORD lpExitCode);
+function LibKernel32.GetExitCodeProcess(hThread: HANDLE; out ExitCode: DWORD): BOOL; static; external 'GetExitCodeProcess@Kernel32.dll stdcall'
+
+//BOOL WINAPI GetExitCodeThread( _In_  HANDLE  hThread, _Out_ LPDWORD lpExitCode); [@Kernel32.dll]
+function LibKernel32.GetExitCodeThread(hThread: HANDLE; out ExitCode: DWORD): BOOL; static; external 'GetExitCodeThread@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetPriorityClass( _In_HANDLE hProcess); [@Kernel32.dll]
 function LibKernel32.GetPriorityClass(hProcess: HANDLE): DWord; static; external 'GetPriorityClass@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetProcessAffinityMask( _In_HANDLE hProcess, _Out_PDWORD_PTR lpProcessAffinityMask, _Out_PDWORD_PTR lpSystemAffinityMask); [@Kernel32.dll]
+// BOOL WINAPI GetProcessAffinityMask( _In_HANDLE hProcess, _Out_ PDWORD_PTR lpProcessAffinityMask, _Out_PDWORD_PTR lpSystemAffinityMask); [@Kernel32.dll]
 function LibKernel32.GetProcessAffinityMask(hProcess: HANDLE; out ProcessAffinityMask, SystemAffinityMask: PtrUInt): BOOL; static; external 'GetProcessAffinityMask@Kernel32.dll' + WINAPI_CC;
 
-// BOOL GetProcessGroupAffinity( _In_HANDLE hProcess, _Inout_PUSHORT GroupCount, _Out_PUSHORT GroupArray); [@Kernel32.dll]
+// BOOL GetProcessGroupAffinity( _In_HANDLE hProcess, _Inout_ PUSHORT GroupCount, _Out_PUSHORT GroupArray); [@Kernel32.dll]
 function LibKernel32.GetProcessGroupAffinity(hProcess: HANDLE; var GroupCount: UInt16; out GroupArray: UInt16): BOOL; static; external 'GetProcessGroupAffinity@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetProcessHandleCount( _In_HANDLE hProcess, _Inout_PDWORD pdwHandleCount); [@Kernel32.dll]
+// BOOL WINAPI GetProcessHandleCount( _In_HANDLE hProcess, _Inout_ PDWORD pdwHandleCount); [@Kernel32.dll]
 function LibKernel32.GetProcessHandleCount(hProcess: HANDLE; var dwHandleCount: DWord): BOOL; static; external 'GetProcessHandleCount@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetProcessId( _In_HANDLE Process); [@Kernel32.dll]
@@ -63,22 +74,22 @@ function LibKernel32.GetProcessId(Process: HANDLE): DWORD; static; external 'Get
 // DWORD WINAPI GetProcessIdOfThread( _In_HANDLE Thread); [@Kernel32.dll]
 function LibKernel32.GetProcessIdOfThread(Thread: HANDLE): DWORD; static; external 'GetProcessIdOfThread@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetProcessPriorityBoost( _In_HANDLE hProcess, _Out_PBOOL pDisablePriorityBoost); [@Kernel32.dll]
+// BOOL WINAPI GetProcessPriorityBoost( _In_HANDLE hProcess, _Out_ PBOOL pDisablePriorityBoost); [@Kernel32.dll]
 function LibKernel32.GetProcessPriorityBoost(hProcess: HANDLE; out DisablePriorityBoost: BOOL): BOOL; static; external 'GetProcessPriorityBoost@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetProcessShutdownParameters( _Out_LPDWORD lpdwLevel, _Out_LPDWORD lpdwFlags); [@Kernel32.dll]
+// BOOL WINAPI GetProcessShutdownParameters( _Out_LPDWORD lpdwLevel, _Out_ LPDWORD lpdwFlags); [@Kernel32.dll]
 function LibKernel32.GetProcessShutdownParameters(out dwLevel, dwFlags: DWord): BOOL; static; external 'GetProcessShutdownParameters@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetProcessVersion( _In_DWORD ProcessId); [@Kernel32.dll]
 function LibKernel32.GetProcessVersion(ProcessId: DWORD): DWORD; static; external 'GetProcessVersion@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetProcessWorkingSetSize( _In_HANDLE hProcess, _Out_PSIZE_T lpMinimumWorkingSetSize, _Out_PSIZE_T lpMaximumWorkingSetSize); [@Kernel32.dll]
+// BOOL WINAPI GetProcessWorkingSetSize( _In_HANDLE hProcess, _Out_ PSIZE_T lpMinimumWorkingSetSize, _Out_PSIZE_T lpMaximumWorkingSetSize); [@Kernel32.dll]
 function LibKernel32.GetProcessWorkingSetSize(hProcess: HANDLE; out lpMinimumWorkingSetSize, lpMaximumWorkingSetSize: SizeInt): BOOL; static; external 'GetProcessWorkingSetSize@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetProcessWorkingSetSizeEx( _In_HANDLE hProcess, _Out_PSIZE_T lpMinimumWorkingSetSize, _Out_PSIZE_T lpMaximumWorkingSetSize, _Out_PDWORD Flags); [@Kernel32.dll]
+// BOOL WINAPI GetProcessWorkingSetSizeEx( _In_HANDLE hProcess, _Out_ PSIZE_T lpMinimumWorkingSetSize, _Out_PSIZE_T lpMaximumWorkingSetSize, _Out_PDWORD Flags); [@Kernel32.dll]
 function LibKernel32.GetProcessWorkingSetSizeEx(hProcess: HANDLE; out MinimumWorkingSetSize, MaximumWorkingSetSize: SizeInt; out Flags: DWord): BOOL; static; external 'GetProcessWorkingSetSizeEx@Kernel32.dll' + WINAPI_CC;
 
-// VOID WINAPI GetStartupInfo( _Out_LPSTARTUPINFO lpStartupInfo); [@Kernel32.dll]
+// VOID WINAPI GetStartupInfo( _Out_ LPSTARTUPINFO lpStartupInfo); [@Kernel32.dll]
 procedure LibKernel32.GetStartupInfo(out StartupInfo: STARTUPINFO); static; external 'GetStartupInfoW@Kernel32.dll' + WINAPI_CC;
 
 // BOOL GetThreadGroupAffinity( _In_HANDLE hThread, _Out_PGROUP_AFFINITY GroupAffinity); [@Kernel32.dll]
@@ -87,16 +98,16 @@ function LibKernel32.GetThreadGroupAffinity(hThread: HANDLE; out GroupAffinity: 
 // DWORD WINAPI GetThreadId( _In_HANDLE Thread); [@Kernel32.dll]
 function LibKernel32.GetThreadId(Thread: HANDLE): DWORD; static; external 'GetThreadId@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetThreadIOPendingFlag( _In_HANDLE hThread, _Inout_PBOOL lpIOIsPending); [@Kernel32.dll]
+// BOOL WINAPI GetThreadIOPendingFlag( _In_HANDLE hThread, _Inout_ PBOOL lpIOIsPending); [@Kernel32.dll]
 function LibKernel32.GetThreadIOPendingFlag(hThread: HANDLE; var IOIsPending: BOOL): BOOL; static; external 'GetThreadIOPendingFlag@Kernel32.dll' + WINAPI_CC;
 
 // int WINAPI GetThreadPriority( _In_HANDLE hThread); [@Kernel32.dll; ]
 function LibKernel32.GetThreadPriority(hThread: HANDLE): Int32; static; external 'GetThreadPriority@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI GetThreadPriorityBoost( _In_HANDLE hThread, _Out_PBOOL pDisablePriorityBoost); [@Kernel32.dll]
+// BOOL WINAPI GetThreadPriorityBoost( _In_HANDLE hThread, _Out_ PBOOL pDisablePriorityBoost); [@Kernel32.dll]
 function LibKernel32.GetThreadPriorityBoost(hThread: HANDLE; out DisablePriorityBoost: BOOL): BOOL; static; external 'GetThreadPriorityBoost@Kernel32.dll' + WINAPI_CC;
 
-// BOOL WINAPI IsProcessInJob( _In_HANDLE ProcessHandle, _In_opt_HANDLE JobHandle, _Out_PBOOL Result); [@Kernel32.dll]
+// BOOL WINAPI IsProcessInJob( _In_HANDLE ProcessHandle, _In_opt_ HANDLE JobHandle, _Out_ PBOOL Result); [@Kernel32.dll]
 function LibKernel32.IsProcessInJob(ProcessHandle: HANDLE; JobHandle: HANDLE; out Res: BOOL): BOOL; static; external 'IsProcessInJob@Kernel32.dll' + WINAPI_CC;
 
 // HANDLE WINAPI OpenProcess( _In_DWORD dwDesiredAccess, _In_BOOL bInheritHandle, _In_DWORD dwProcessId); [@Kernel32.dll]
