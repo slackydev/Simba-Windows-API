@@ -307,13 +307,6 @@ function LibUser32.WindowFromPhysicalPoint(Point: TPoint): HWND; static; externa
 // HWND WINAPI WindowFromPoint( _In_ POINT Point);
 function LibUser32.WindowFromPoint(Point: TPoint): HWND; static; external 'WindowFromPoint@user32.dll' + WINAPI_CC;
 
-// LONG WINAPI GetWindowLong( _In_ HWND hWnd, _In_ int nIndex);
-function LibUser32.GetWindowLong(wnd: HWND; nIndex:Int32): WINLONG; static; external 'GetWindowLongW@user32.dll' + WINAPI_CC;
-
-// LONG WINAPI SetWindowLong( _In_ HWND hWnd, _In_ int nIndex; _In_ LONG dwNewLong);
-function LibUser32.SetWindowLong(wnd: HWND; nIndex:Int32; New:WINLONG): WINLONG; static; external 'SetWindowLongW@user32.dll' + WINAPI_CC;
-
-
 
 //--------------------------------------------------------------------------------------------------------------------\\
 //-----| Window Classes  >  Window Class Reference  >  Window Class Functions   |-------------------------------------||
@@ -326,4 +319,10 @@ function LibUser32.GetClassName(wnd: HWND; nMaxCount:Int32 = 1024): WideString; 
 begin
   SetLength(Result, nMaxCount);
   SetLength(Result, LibUser32.GetClassNameW(wnd, PWideChar(Result), nMaxCount));
-end; 
+end;
+
+// LONG WINAPI GetWindowLong( _In_ HWND hWnd, _In_ int nIndex);
+function LibUser32.GetWindowLong(wnd: HWND; nIndex:Int32): WINLONG; static; external 'GetWindowLongW@user32.dll' + WINAPI_CC;
+
+// LONG WINAPI SetWindowLong( _In_ HWND hWnd, _In_ int nIndex; _In_ LONG dwNewLong);
+function LibUser32.SetWindowLong(wnd: HWND; nIndex:Int32; New:WINLONG): WINLONG; static; external 'SetWindowLongW@user32.dll' + WINAPI_CC;
