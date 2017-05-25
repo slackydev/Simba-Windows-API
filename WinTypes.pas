@@ -123,8 +123,8 @@ type
   TBlendFunction = Pointer;  
   
   _EnumWindowsProc = function(wnd:HWND; Param: LPARAM): BOOL;
-  TEnumWindowsProc = native(_EnumWindowsProc, ffi_stdcall);
-  
+  TEnumWindowsProc = native(_EnumWindowsProc, {$IFDEF CPU386}ffi_stdcall{$ELSE}ffi_win64{$ENDIF});
+
   PRect = ^TRect;
   
   PSizeStruct = ^TSizeStruct;
@@ -289,7 +289,7 @@ end;
 
 function MAKELPARAM(wLow, wHigh: WORD): LPARAM;
 begin
-  Result := LPARAM(MAKELONG(wLow, wHigh));
+  PtrUInt(Result) := MAKELONG(wLow, wHigh);
 end;
 
 

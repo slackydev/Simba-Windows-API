@@ -166,10 +166,10 @@ function LibKernel32.TerminateProcess(hProcess: HANDLE; uExitCode: UInt32): BOOL
 function LibKernel32.TerminateThread(hThread: HANDLE; dwExitCode: DWORD): BOOL; static; external 'TerminateThread@Kernel32.dll' + WINAPI_CC;
 
 // DWORD WINAPI TlsAlloc(); [@Kernel32.dll]
-function LibKernel32.TlsAlloc(): DWord; static; external 'TlsAlloc@Kernel32.dll ' + WINAPI_CC;
+function LibKernel32.TlsAlloc(): DWord; static; external 'TlsAlloc@Kernel32.dll' + WINAPI_CC;
 
 // BOOL WINAPI TlsFree( _In_DWORD dwTlsIndex); [@Kernel32.dll]
-function LibKernel32.TlsFree(dwTlsIndex: DWord): BOOL; static; external 'TlsFree@Kernel32.dll ' + WINAPI_CC;
+function LibKernel32.TlsFree(dwTlsIndex: DWord): BOOL; static; external 'TlsFree@Kernel32.dll' + WINAPI_CC;
 
 // LPVOID WINAPI TlsGetValue( _In_DWORD dwTlsIndex); [@Kernel32.dll]
 function LibKernel32.TlsGetValue(dwTlsIndex: DWord): Pointer; static; external 'TlsGetValue@Kernel32.dll' + WINAPI_CC;

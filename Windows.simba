@@ -2,7 +2,7 @@
   {$IFDEF HINTS}{$DEFINE !HAD_HINTS}{$HINTS-}{$ENDIF}
 {$ENDIF}
 
-{$IFDEF WIN32}
+{$IFDEF CPU386}
 const WINAPI_CC = ' stdcall';
 {$ELSE}
 const WINAPI_CC = '';
