@@ -53,10 +53,10 @@ function ToString(x:TSysProcEx): String; override;
 begin
   Result := '[';
   Result += '$'+IntToHex(x.Handle,8) + ', ' + Format('%.6d',[x.PID]) + ', ';
+  Result += #39 + x.Title + #39+', ';
   Result += '(';
   Result += ToString(x.Bounds.Left) + ', ' + ToString(x.Bounds.Top) + ', '
-         +  ToString(x.Bounds.Right) + ', '+ ToString(x.Bounds.Bottom) + '), ';
-  Result += #39 + x.Title + #39;
+         +  ToString(x.Bounds.Right) + ', '+ ToString(x.Bounds.Bottom) + ')';
   Result += ']';
 end;
 

@@ -1,4 +1,14 @@
-{$IFNDEF WINAPI:DEBUG}{$IFDEF HINTS}{$DEFINE !HAD_HINTS}{$HINTS-}{$ENDIF}{$ENDIF}
+{$IFNDEF WINAPI:DEBUG}
+  {$IFDEF HINTS}{$DEFINE !HAD_HINTS}{$HINTS-}{$ENDIF}
+{$ENDIF}
+
+{$IFDEF WIN32}
+const WINAPI_CC = ' stdcall';
+{$ELSE}
+const WINAPI_CC = '';
+{$ENDIF}
+
+
 {$include_once WinTypes.pas}
 {$include_once dc_methods.pas}
 {$include_once io_methods.pas}
