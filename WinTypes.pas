@@ -20,9 +20,9 @@ var
 
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
-  {$IFNDECL PUInt32}  PUInt32 = ^UInt32;    {$ENDIF}
-  {$IFNDECL PUInt16}  PUInt16 = ^UInt16;    {$ENDIF}
-  {$IFNDECL PUInt8}   PUInt8  = ^UInt8;     {$ENDIF}
+  {$IFNDECL PUInt32}  PUInt32   = ^UInt32;  {$ENDIF}
+  {$IFNDECL PUInt16}  PUInt16   = ^UInt16;  {$ENDIF}
+  {$IFNDECL PUInt8}   PUInt8    = ^UInt8;   {$ENDIF}
   
   WINBOOL = LongBool;
   BOOL    = WINBOOL;
@@ -33,29 +33,8 @@ type
   
   WINLONG  = Int32;
   WININT   = Int32;
-  WINSHORT = Int16; 
-  (*
-  SHORT = Int16;
-  WINT  = Int32;
-  LONG  = Int32;
-  
-  PInteger = ^Int32;
+  WINSHORT = Int16;
 
-  LongLong  = Int64;
-  PLongLong = ^LongLong;
-  
-  INT_PTR   = PtrInt;
-  UINT_PTR  = PtrUInt;
-  LONG_PTR  = PtrInt;
-  ULONG_PTR = PtrUInt;
-  DWORD_PTR  = ULONG_PTR;
-  PDWORD_PTR = ^DWORD_PTR;
-  PULONG_PTR = ^ULONG_PTR;
-  PLONG64    = ^Int64;
-  
-  DWORDLONG  = UInt64;
-  PDWORDLONG = ^DWORDLONG;
-  *)
 
   HANDLE   = PtrUInt;
 //HRESULT  = Pointer;
@@ -301,6 +280,17 @@ type
     time: UInt32;
     dwExtraInfo: PtrUInt;
   end; 
+
+
+function MAKELONG(a, b: WORD): DWORD;
+begin
+  Result := (b shl 16) or a;
+end;
+
+function MAKELPARAM(wLow, wHigh: WORD): LPARAM;
+begin
+  Result := LPARAM(MAKELONG(wLow, wHigh));
+end;
 
 
 const
