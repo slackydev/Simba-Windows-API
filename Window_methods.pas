@@ -261,7 +261,6 @@ function LibUser32.SetWindowDisplayAffinity(wnd: HWND; dwAffinity: DWord): BOOL;
 //function LibUser32.SetWindowFeedbackSettings(wnd: HWND; feedback: FEEDBACK_TYPE; flags: DWORD; size: UINT32; const configuration: Pointer): BOOL; static; external 'SetWindowFeedbackSettings@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI SetWindowPlacement( _In_ HWND hWnd, _In_ const WINDOWPLACEMENT *lpwndpl);
-//function LibUser32.SetWindowPlacement(wnd: HWND; const lpwndpl: ^WINDOWPLACEMENT): BOOL; static; external 'SetWindowPlacement@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI SetWindowPos( _In_ HWND hWnd, _In_opt_  HWND hWndInsertAfter, _In_ int X, _In_ int Y, _In_ int cx, _In_ int cy, _In_ UINT uFlags);
 function LibUser32.SetWindowPos(wnd: HWND; hWndInsertAfter: HWND; X,Y,cx,cy: Int32; uFlags: UInt32): BOOL; static; external 'SetWindowPos@user32.dll' + WINAPI_CC;
