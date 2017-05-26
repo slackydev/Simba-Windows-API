@@ -10,27 +10,14 @@ type
   end;
   TSysProcExArr = array of TSysProcEx;
 
-function IsRealWindow(handle:HWND): Boolean;
+
+function IsVisibleOnDesktop(handle: HWND): Boolean;
 var
-  hasOwner:Boolean;
-  exStyle:UInt32;
-  wpl: TWindowPlacement;
+  style: LongInt;
+  TARGET_WS := (WS_BORDER or WS_VISIBLE);
 begin
-  Result := False;
-  if (not User32.IsWindowVisible(handle)) or (User32.IsIconic(handle)) then
-    Exit(False);
-  if User32.GetParent(handle) <> 0 then
-   Exit(True);
-
-  if User32.GetWindowPlacement(handle, wpl) then
-    if (wpl.showCmd and SW_HIDE <> 0) or
-       (wpl.showCmd and SW_SHOWNORMAL = 0) then Exit(False);
-
-  hasOwner := User32.GetWindow(handle, GW_OWNER) <> 0;
-  exStyle := User32.GetWindowLong(handle, GWL_EXSTYLE);
-  if ((exStyle and WS_EX_TOOLWINDOW = 0) and (not hasOwner)) or
-     ((exStyle and WS_EX_APPWINDOW <> 0) and (hasOwner)) then
-    Result := True;
+  style := User32.GetWindowLong(handle, GWL_STYLE);
+  Result := (style and TARGET_WS = TARGET_WS) and (style and WS_POPUP = 0);
 end;
 
 function GetVisibleWindows(): TSysProcExArr;
@@ -39,7 +26,7 @@ function GetVisibleWindows(): TSysProcExArr;
     Res:^TSysProcExArr := Param;
     i:Int32;
   begin
-    if IsRealWindow(Handle) then
+    if IsVisibleOnDesktop(Handle) then
     begin
       i := Length(Res^);
       SetLength(Res^, i+1);
@@ -61,8 +48,8 @@ begin
   Result += '$'+IntToHex(x.Handle,8) + ', ' + Format('%.6d',[x.PID]) + ', ';
   Result += #39 + x.Title + #39+', ';
   Result += '(';
-  Result += ToString(x.Bounds.Left) + ', ' + ToString(x.Bounds.Top) + ', '
-         +  ToString(x.Bounds.Right) + ', '+ ToString(x.Bounds.Bottom) + ')';
+  Result += ToStr(x.Bounds.Left) + ', ' + ToStr(x.Bounds.Top) + ', '
+         +  ToStr(x.Bounds.Right) + ', '+ ToStr(x.Bounds.Bottom) + ')';
   Result += ']';
 end;
 
