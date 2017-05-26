@@ -14,12 +14,18 @@ function IsRealWindow(handle:HWND): Boolean;
 var
   hasOwner:Boolean;
   exStyle:UInt32;
+  wpl: TWindowPlacement;
 begin
   Result := False;
-  if not User32.IsWindowVisible(handle) then
+  if (not User32.IsWindowVisible(handle)) or (User32.IsIconic(handle)) then
     Exit(False);
   if User32.GetParent(handle) <> 0 then
-    Exit(True);
+   Exit(True);
+
+  if User32.GetWindowPlacement(handle, wpl) then
+    if (wpl.showCmd and SW_HIDE <> 0) or
+       (wpl.showCmd and SW_SHOWNORMAL = 0) then Exit(False);
+
   hasOwner := User32.GetWindow(handle, GW_OWNER) <> 0;
   exStyle := User32.GetWindowLong(handle, GWL_EXSTYLE);
   if ((exStyle and WS_EX_TOOLWINDOW = 0) and (not hasOwner)) or

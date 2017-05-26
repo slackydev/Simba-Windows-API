@@ -152,7 +152,7 @@ function LibUser32.GetWindowInfo(wnd: HWND; var wi: WINDOWINFO): Boolean; static
 function LibUser32.GetWindowModuleFileName(wnd: HWND; lpszFileName: LPTSTR; cchFileNameMax: UInt32): UInt32; static; external 'GetWindowModuleFileName@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI GetWindowPlacement( _In_ HWND hWnd, _Inout_ WINDOWPLACEMENT *lpwndpl);
-//function GetWindowPlacement(wnd: HWND; lpwndpl: ^WINDOWPLACEMENT): BOOL; static; external 'GetWindowPlacement@user32.dll' + WINAPI_CC;
+function LibUser32.GetWindowPlacement(wnd: HWND; var wndpl: TWindowPlacement): BOOL; static; external 'GetWindowPlacement@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI GetWindowRect( _In_ HWND hWnd, _Out_LPRECT lpRect);
 function LibUser32.GetWindowRect(wnd: HWND): TRect; static;
@@ -161,8 +161,6 @@ begin
   if not _GetWindowRect(wnd, @Result) then
     Result := [0,0,0,0];
 end;
-
-
 
 // int WINAPI GetWindowText( _In_ HWND hWnd, _Out_LPTSTR lpString, _In_ int nMaxCount);
 function LibUser32.GetWindowTextA(wnd: HWND; lpString: LPCTSTR; nMaxCount: Int32): Int32; static; external 'GetWindowTextA@user32.dll' + WINAPI_CC;

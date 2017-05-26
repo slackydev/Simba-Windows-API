@@ -185,8 +185,8 @@ type
   end;
   
   TWindowPlacement = record
-    length: UInt32;
-    flags: UInt32;
+    length:  UInt32;
+    flags:   UInt32;
     showCmd: UInt32;
     ptMinPosition: TPoint;
     ptMaxPosition: TPoint;
@@ -408,26 +408,26 @@ const
   GWL_USERDATA    = -21;
   
   //WS_
-  WS_OVERLAPPED   = 0;
-  WS_POPUP        = -2147483648;
-  WS_CHILD        = 1073741824;
-  WS_MINIMIZE     = 536870912;
-  WS_VISIBLE      = 268435456;
-  WS_DISABLED     = 134217728;
-  WS_CLIPSIBLINGS = 67108864;
-  WS_CLIPCHILDREN = 33554432;
-  WS_MAXIMIZE     = 16777216;
-  WS_CAPTION      = 12582912;
-  WS_BORDER       = 8388608;
-  WS_DLGFRAME     = 4194304;
-  WS_VSCROLL      = 2097152;
-  WS_HSCROLL      = 1048576;
-  WS_SYSMENU      = 524288;
-  WS_THICKFRAME   = 262144;
-  WS_GROUP        = 131072;
-  WS_TABSTOP      = 65536;
-  WS_MINIMIZEBOX  = 131072;
-  WS_MAXIMIZEBOX  = 65536;
+  WS_OVERLAPPED   = LongInt(0);
+  WS_POPUP        = LongInt($80000000);
+  WS_CHILD        = LongInt($40000000);
+  WS_MINIMIZE     = LongInt($20000000);
+  WS_VISIBLE      = LongInt($10000000);
+  WS_DISABLED     = LongInt($08000000);
+  WS_CLIPSIBLINGS = LongInt($04000000);
+  WS_CLIPCHILDREN = LongInt($02000000);
+  WS_MAXIMIZE     = LongInt($01000000);
+  WS_CAPTION      = LongInt($00C00000);
+  WS_BORDER       = LongInt($00800000);
+  WS_DLGFRAME     = LongInt($00400000);
+  WS_VSCROLL      = LongInt($00200000);
+  WS_HSCROLL      = LongInt($00100000);
+  WS_SYSMENU      = LongInt($00080000);
+  WS_THICKFRAME   = LongInt($00040000);
+  WS_GROUP        = LongInt($00020000);
+  WS_TABSTOP      = LongInt($00010000);
+  WS_MINIMIZEBOX  = LongInt($00020000);
+  WS_MAXIMIZEBOX  = LongInt($00010000);
   WS_TILED            = WS_OVERLAPPED;
   WS_ICONIC           = WS_MINIMIZE;
   WS_SIZEBOX          = WS_THICKFRAME;
@@ -521,5 +521,16 @@ const
   WM_MBUTTONUP       = $0208;
   WM_MBUTTONDBLCLK   = $0209; 
   
-  
+  //SW_
+  SW_HIDE            = 0;
+  SW_MAXIMIZE        = 3;
+  SW_MINIMIZE        = 6;
+  SW_RESTORE         = 9;
+  SW_SHOW            = 5;
+  SW_SHOWMAXIMIZED   = 3;
+  SW_SHOWMINIMIZED   = 2;
+  SW_SHOWMINNOACTIVE = 7;
+  SW_SHOWNA          = 8;
+  SW_SHOWNOACTIVATE  = 4;
+  SW_SHOWNORMAL      = 1;
   
