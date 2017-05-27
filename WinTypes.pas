@@ -17,6 +17,8 @@ var
   Advapi32: LibMsimg32;
   Avrt:     LibAvrt;
 
+const
+  ffi_winapi = {$IFDEF CPU386}ffi_stdcall{$ELSE}ffi_win64{$ENDIF};
 
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
@@ -34,7 +36,8 @@ type
   WINLONG  = Int32;
   WININT   = Int32;
   WINSHORT = Int16;
-
+  
+  SIZE_T   = SizeInt;
 
   HANDLE   = PtrUInt;
 //HRESULT  = Pointer;
@@ -123,7 +126,7 @@ type
   TBlendFunction = Pointer;  
   
   _EnumWindowsProc = function(wnd:HWND; Param: LPARAM): BOOL;
-  TEnumWindowsProc = native(_EnumWindowsProc, {$IFDEF CPU386}ffi_stdcall{$ELSE}ffi_win64{$ENDIF});
+  TEnumWindowsProc = native(_EnumWindowsProc, ffi_winapi);
 
   PRect = ^TRect;
   
@@ -184,7 +187,7 @@ type
     ptScreenPos: TPoint;
   end;
   
-  TWindowPlacement = record
+  WINDOWPLACEMENT = record
     length:  UInt32;
     flags:   UInt32;
     showCmd: UInt32;
@@ -235,6 +238,14 @@ type
     hStdError: HANDLE;
   end;
   
+  SECURITY_ATTRIBUTES = record
+    nLength: DWORD;
+    lpSecurityDescriptor: LPVOID;
+    bInheritHandle: WINBOOL;
+  end;
+  
+  THREAD_START_ROUTINE = procedure(lpParam: Pointer);
+  LPTHREAD_START_ROUTINE = native(THREAD_START_ROUTINE, ffi_winapi);
   
   //---| SendInput |----------
   TMouseInput = record
@@ -533,4 +544,8 @@ const
   SW_SHOWNA          = 8;
   SW_SHOWNOACTIVATE  = 4;
   SW_SHOWNORMAL      = 1;
+  
+  //...
+  CREATE_SUSPENDED = $4;
+  STACK_SIZE_PARAM_IS_A_RESERVATION = $10000;
   

@@ -1,0 +1,112 @@
+{$include_once Windows/Windows.simba} 
+//----------------------------------------------------------
+// Simple threading utilities
+type 
+  TLapeThreadProc = LPTHREAD_START_ROUTINE;
+  TLapeThread = record
+    FHandle: HANDLE;
+    FThreadID: DWORD;
+    FMethod: TLapeThreadProc;
+    FArgs: Pointer;
+  end;
+
+
+  //__TLapeTimerProc = procedure();
+  TLapeTimerProc = procedure();//native(__TLapeTimerProc, ffi_winapi);
+
+  PLapeTimer = ^TLapeTimer;
+  TLapeTimer = record
+    FHandle: HANDLE;
+    FThreadID: DWORD;
+    FMethod: TLapeTimerProc;
+    FInterval: Int32;
+  end;
+
+
+// -----------------------------------------------------------------------------
+// Simple lape threading
+//
+function TLapeThread.Create(Method: TLapeThreadProc; Args: Pointer): TLapeThread; static;
+begin
+  Result.FArgs   := Args;
+  Result.FMethod := Method;
+  Result.FHandle := Windows.CreateThread(nil, 0, Result.FMethod, Result.FArgs, CREATE_SUSPENDED, @Result.FThreadID);
+end;
+
+function TLapeThread.Recreate(): Boolean;
+begin
+  if Self.FHandle <> 0 then Exit(False);
+  Self.FHandle := Windows.CreateThread(nil, 0, Self.FMethod, Self.FArgs, CREATE_SUSPENDED, @Self.FThreadID);
+end;
+
+procedure TLapeThread.Terminate();
+var excode: DWORD;
+begin
+  Windows.GetExitCodeThread(Self.FHandle, excode);
+  Windows.TerminateThread(Self.FHandle, excode);
+  Self.FHandle   := 0;
+  Self.FThreadID := 0;
+end;
+
+procedure TLapeThread.Execute();
+begin
+  Windows.ResumeThread(Self.FHandle);
+end;
+
+procedure TLapeThread.Suspend();
+begin
+  Windows.SuspendThread(Self.FHandle);
+end;
+
+procedure TLapeThread.Resume();
+begin
+  Windows.ResumeThread(Self.FHandle);
+end;
+
+
+
+// -----------------------------------------------------------------------------
+// Simple lape timer
+//
+function TLapeTimer.Create(OnTimer: TLapeTimerProc; Interval:Int32): TLapeTimer; static;
+begin
+  Result.FMethod   := @OnTimer;
+  Result.FInterval := Interval;
+  Result.FHandle   := Windows.CreateThread(nil, 0, Result.TimerProc, @Result, CREATE_SUSPENDED, @Result.FThreadID);
+end;
+
+procedure TLapeTimer.TimerProc(argz:Pointer); static;
+begin
+  while True do
+  begin
+    PLapeTimer(argz)^.FMethod();
+    Sleep(PLapeTimer(argz)^.FInterval);
+  end;
+end;
+
+procedure TLapeTimer.Terminate();
+var excode: DWORD;
+begin
+  Windows.GetExitCodeThread(Self.FHandle, excode);
+  Windows.TerminateThread(Self.FHandle, excode);
+  Self.FHandle   := 0;
+  Self.FThreadID := 0;
+end;
+
+procedure TLapeTimer.Start();
+begin
+  Windows.ResumeThread(Self.FHandle);
+end;
+
+procedure TLapeTimer.Pause();
+begin
+  Windows.SuspendThread(Self.FHandle);
+end;
+
+
+
+
+
+{$IFDEF THREADED_MML}
+{$include_once threading/mml.pas}
+{$ENDIF}

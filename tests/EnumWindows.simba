@@ -17,7 +17,8 @@ var
   TARGET_WS := (WS_BORDER or WS_VISIBLE);
 begin
   style := User32.GetWindowLong(handle, GWL_STYLE);
-  Result := (style and TARGET_WS = TARGET_WS) and (style and WS_POPUP = 0);
+  Result := (style and TARGET_WS = TARGET_WS) and (style and WS_POPUP = 0) and
+            (not User32.IsIconic(handle));
 end;
 
 function GetVisibleWindows(): TSysProcExArr;

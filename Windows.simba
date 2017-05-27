@@ -9,17 +9,18 @@ const WINAPI_CC = ' win64';
 {$ENDIF}
 
 
-{$include_once WinTypes.pas}
-{$include_once dc_methods.pas}
-{$include_once io_methods.pas}
-{$include_once window_methods.pas}
-{$include_once bitmap_methods.pas}
-{$include_once sysinfo_methods.pas}
-{$include_once process_methods.pas}
+{$include_once winTypes.pas}
+{$include_once winDC.pas}
+{$include_once winIO.pas}
+{$include_once winWindow.pas}
+{$include_once winBitmap.pas}
+{$include_once winSysinfo.pas}
+{$include_once winProcess.pas}
+
 
 // helper method
 {$IFNDECL GetHandle}
-function GetHandle(Str:String): HWND; overload;
+function GetHandle(Str: String): HWND; overload;
 var proc:TSysProc;
 begin
   for proc in GetProcesses() do

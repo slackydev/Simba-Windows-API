@@ -152,7 +152,7 @@ function LibUser32.GetWindowInfo(wnd: HWND; var wi: WINDOWINFO): Boolean; static
 function LibUser32.GetWindowModuleFileName(wnd: HWND; lpszFileName: LPTSTR; cchFileNameMax: UInt32): UInt32; static; external 'GetWindowModuleFileName@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI GetWindowPlacement( _In_ HWND hWnd, _Inout_ WINDOWPLACEMENT *lpwndpl);
-function LibUser32.GetWindowPlacement(wnd: HWND; var wndpl: TWindowPlacement): BOOL; static; external 'GetWindowPlacement@user32.dll' + WINAPI_CC;
+function LibUser32.GetWindowPlacement(wnd: HWND; var wndpl: WINDOWPLACEMENT): BOOL; static; external 'GetWindowPlacement@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI GetWindowRect( _In_ HWND hWnd, _Out_LPRECT lpRect);
 function LibUser32.GetWindowRect(wnd: HWND): TRect; static;
@@ -261,6 +261,7 @@ function LibUser32.SetWindowDisplayAffinity(wnd: HWND; dwAffinity: DWord): BOOL;
 //function LibUser32.SetWindowFeedbackSettings(wnd: HWND; feedback: FEEDBACK_TYPE; flags: DWORD; size: UINT32; const configuration: Pointer): BOOL; static; external 'SetWindowFeedbackSettings@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI SetWindowPlacement( _In_ HWND hWnd, _In_ const WINDOWPLACEMENT *lpwndpl);
+function LibUser32.SetWindowPlacement(wnd: HWND; constref wndpl: WINDOWPLACEMENT): BOOL; static; external 'SetWindowPlacement@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI SetWindowPos( _In_ HWND hWnd, _In_opt_  HWND hWndInsertAfter, _In_ int X, _In_ int Y, _In_ int cx, _In_ int cy, _In_ UINT uFlags);
 function LibUser32.SetWindowPos(wnd: HWND; hWndInsertAfter: HWND; X,Y,cx,cy: Int32; uFlags: UInt32): BOOL; static; external 'SetWindowPos@user32.dll' + WINAPI_CC;
@@ -323,3 +324,13 @@ function LibUser32.GetWindowLong(wnd: HWND; nIndex:Int32): WINLONG; static; exte
 
 // LONG WINAPI SetWindowLong( _In_ HWND hWnd, _In_ int nIndex; _In_ LONG dwNewLong);
 function LibUser32.SetWindowLong(wnd: HWND; nIndex:Int32; New:WINLONG): WINLONG; static; external 'SetWindowLongW@user32.dll' + WINAPI_CC;
+
+// ULONG_PTR WINAPI GetClassLongPtr(_In_ HWND hWnd, _In_ int nIndex);
+//function LibUser32.GetClassLongPtr(wnd: HWND; nIndex:Int32): PtrUInt; static; external 'GetClassLongPtrW@user32.dll' + WINAPI_CC;
+
+// DWORD WINAPI GetClassLong(_In_ HWND hWnd, _In_ int nIndex);
+function LibUser32.GetClassLong(wnd: HWND; nIndex:Int32): DWORD; static; external 'GetClassLongW@user32.dll' + WINAPI_CC;
+
+//DWORD WINAPI SetClassLong( _In_ HWND hWnd, _In_ int  nIndex, _In_ LONG dwNewLong);
+function LibUser32.SetClassLong(wnd: HWND; nIndex:Int32; New:WINLONG): WINLONG; static; external 'SetClassLongW@user32.dll' + WINAPI_CC;
+

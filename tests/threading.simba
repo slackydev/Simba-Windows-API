@@ -1,0 +1,35 @@
+program new;
+{$DEFINE THREADED_MML}
+{$I Windows/Threading.simba}
+
+procedure MyThread(argz:Pointer);
+begin
+  while True do
+  begin
+    WriteLn(TRGB32(GetColor(100,100)));
+    Sleep(100);
+  end;
+end;
+
+procedure MyTimerMethod();
+begin
+  WriteLn(GetTimeRunning());
+end;
+
+var
+  thread: TLapeThread;
+  timer: TLapeTimer;
+begin
+  WriteLn('--| STARTING THREAD |--------------------');
+  thread := TLapeThread.Create(@MyThread, nil);
+  thread.Execute();
+  wait(1000);
+  thread.Terminate();
+
+  WriteLn('--| STARTING TIMER |---------------------');
+  timer := TLapeTimer.Create(@MyTimerMethod, 100);
+  timer.Start();
+  wait(1000);
+  timer.Terminate();
+end;
+
