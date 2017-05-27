@@ -1,6 +1,7 @@
-{$include_once Windows/Windows.simba} 
-//----------------------------------------------------------
-// Simple threading utilities
+// Simple threading utilities for lape on Windows.
+// Could contain mistakes on my part, it's not well tested..
+{$include_once Windows/Windows.simba}
+
 type 
   TLapeThreadProc = LPTHREAD_START_ROUTINE;
   TLapeThread = record
@@ -11,9 +12,7 @@ type
   end;
 
 
-  //__TLapeTimerProc = procedure();
-  TLapeTimerProc = procedure();//native(__TLapeTimerProc, ffi_winapi);
-
+  TLapeTimerProc = procedure();
   PLapeTimer = ^TLapeTimer;
   TLapeTimer = record
     FHandle: HANDLE;
