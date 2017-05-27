@@ -2,10 +2,13 @@ program new;
 {$DEFINE THREADED_MML}
 {$I Windows/Threading.simba}
 procedure MyThread(argz:Pointer);
+var
+  TPA: TPointArray;
 begin
   while True do
   begin
-    WriteLn(TRGB32(GetColor(100,100)));
+    FindColorsTolerance(TPA, $000000, 0,0,100,100, 1);
+    WriteLn(Length(TPA));
     Sleep(100);
   end;
 end;
@@ -31,5 +34,7 @@ begin
   timer.Start();
   wait(1000);
   timer.Terminate();
+
+
 end;
 
