@@ -1,7 +1,6 @@
 program new;
 {$DEFINE THREADED_MML}
 {$I Windows/Threading.simba}
-
 procedure MyThread(argz:Pointer);
 begin
   while True do
@@ -14,6 +13,7 @@ end;
 procedure MyTimerMethod();
 begin
   WriteLn(GetTimeRunning());
+  Sleep(Random(0,70));
 end;
 
 var

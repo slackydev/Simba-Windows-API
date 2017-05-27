@@ -65,8 +65,8 @@ end;
 
 
 // -----------------------------------------------------------------------------
-// Simple lape timer
-//
+// Simple lape timer - Note that it will not create overlapping threads!
+// Interval is just the minimum time between execution of the timer-method.
 function TLapeTimer.Create(OnTimer: TLapeTimerProc; Interval:Int32): TLapeTimer; static;
 begin
   Result.FMethod   := @OnTimer;
@@ -75,11 +75,17 @@ begin
 end;
 
 procedure TLapeTimer.TimerProc(argz:Pointer); static;
+var
+  t: TDateTime;
+  sleepFor: Int32;
 begin
   while True do
   begin
+    t := Now();
     PLapeTimer(argz)^.FMethod();
-    Sleep(PLapeTimer(argz)^.FInterval);
+    sleepFor := PLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
+    if sleepFor > 0 then
+      Sleep(sleepFor);
   end;
 end;
 
@@ -104,6 +110,16 @@ end;
 
 
 
+var __WRITE_QUEUE: String;
+procedure _Write(str: String); override;
+begin
+  __WRITE_QUEUE += str;
+end;
+procedure _writeln; override;
+begin
+  client.WriteLn(__WRITE_QUEUE);
+  __WRITE_QUEUE := [];
+end;
 
 
 {$IFDEF THREADED_MML}
