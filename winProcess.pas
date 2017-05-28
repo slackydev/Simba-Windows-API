@@ -213,3 +213,33 @@ function LibUser32.WaitForInputIdle(hProcess: HANDLE; dwMilliseconds: DWORD): DW
 
 // UINT WINAPI WinExec( _In_LPCSTR lpCmdLine, _In_UINT uCmdShow); [@Kernel32.dll]
 function LibKernel32.WinExec(lpCmdLine: LPTSTR; uCmdShow: UInt32): UInt32; static; external 'WinExec@Kernel32.dll' + WINAPI_CC;
+
+
+
+//--------------------------------------------------------------------------------------------------------------------\\
+//-----| Synchronization  >  Synchronization Reference  >  Synchronization Functions   |------------------------------||
+//--------------------------------------------------------------------------------------------------------------------//
+
+//DWORD WINAPI WaitForSingleObject(_In_ HANDLE hHandle, _In_ DWORD dwMilliseconds);
+function LibKernel32.WaitForSingleObject(H: HANDLE; dwMilliseconds: DWORD): DWORD; static; external 'WaitForSingleObject@Kernel32.dll' + WINAPI_CC;
+
+//DWORD WINAPI WaitForSingleObjectEx(_In_ HANDLE hHandle, _In_ DWORD dwMilliseconds, _In_ BOOL bAlertable);
+function LibKernel32.WaitForSingleObjectEx(H: HANDLE; dwMilliseconds: DWORD; bAlertable:WINBOOL): DWORD; static; external 'WaitForSingleObjectEx@Kernel32.dll' + WINAPI_CC;
+
+//DWORD WINAPI WaitForMultipleObjects(_In_ DWORD nCount,_In_ const HANDLE *lpHandles, _In_ BOOL bWaitAll, _In_ DWORD dwMilliseconds);
+function LibKernel32.WaitForMultipleObjects(nCount:DWORD; Handles: ^HANDLE; bWaitAll: WINBOOL; dwMilliseconds: DWORD): DWORD; static; external 'WaitForMultipleObjects@Kernel32.dll' + WINAPI_CC;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

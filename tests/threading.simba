@@ -1,6 +1,7 @@
 program new;
 {$DEFINE THREADED_MML}
 {$I Windows/Threading.simba}
+
 procedure MyThread(argz:Pointer);
 var
   TPA: TPointArray;
@@ -19,6 +20,7 @@ begin
   Sleep(Random(0,70));
 end;
 
+
 var
   thread: TLapeThread;
   timer: TLapeTimer;
@@ -27,14 +29,13 @@ begin
   thread := TLapeThread.Create(@MyThread, nil);
   thread.Execute();
   wait(1000);
-  thread.Terminate();
+  thread.Terminate(); //!unsafe
+
 
   WriteLn('--| STARTING TIMER |---------------------');
   timer := TLapeTimer.Create(@MyTimerMethod, 100);
   timer.Start();
   wait(1000);
   timer.Terminate();
-
-
 end;
 

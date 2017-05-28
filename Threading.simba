@@ -13,12 +13,13 @@ type
 
 
   TLapeTimerProc = procedure();
-  PLapeTimer = ^TLapeTimer;
-  TLapeTimer = record
+  TLapeTimer = ^TLapeTimerRec;
+  TLapeTimerRec = record
     FHandle: HANDLE;
     FThreadID: DWORD;
-    FMethod: TLapeTimerProc;
+    FOnTimer: TLapeTimerProc;
     FInterval: Int32;
+    FEnabled: Boolean;
   end;
 
 
@@ -69,9 +70,60 @@ end;
 // Interval is just the minimum time between execution of the timer-method.
 function TLapeTimer.Create(OnTimer: TLapeTimerProc; Interval:Int32): TLapeTimer; static;
 begin
-  Result.FMethod   := @OnTimer;
-  Result.FInterval := Interval;
-  Result.FHandle   := Windows.CreateThread(nil, 0, Result.TimerProc, @Result, CREATE_SUSPENDED, @Result.FThreadID);
+  Result := AllocMem(SizeOf(TLapeTimerRec));
+  Result^.FOnTimer  := @OnTimer;
+  Result^.FInterval := Interval;
+  Result^.FEnabled  := True;
+  Result^.FHandle   := Windows.CreateThread(nil, 0, TLapeTimer.TimerProc, Result, CREATE_SUSPENDED, @Result^.FThreadID);
+end;
+
+procedure TLapeTimer.Terminate();
+begin
+  Self^.FEnabled  := False;
+  Self^.FHandle   := 0;
+  Self^.FThreadID := 0;
+  Windows.WaitForSingleObject(Self^.FHandle, $FFFFFFFF);
+  FreeMem(Self);
+end;
+
+procedure TLapeTimer.Start();
+begin
+  Windows.ResumeThread(Self^.FHandle);
+end;
+
+procedure TLapeTimer.Pause();
+begin
+  Windows.SuspendThread(Self^.FHandle);
+end;
+
+function TLapeTimer.Handle(): HANDLE;
+begin
+  Result := Self^.FHandle;
+end;
+
+function TLapeTimer.ThreadID(): DWORD;
+begin
+  Result := Self^.FThreadID;
+end;
+
+function TLapeTimer.GetInterval(): Int32;
+begin
+  Result := Self^.FInterval;
+end;
+
+procedure TLapeTimer.SetInterval(Value: Int32);
+begin
+  Self^.FInterval := Value;
+end;
+
+procedure TLapeTimer.SetOnTimer(OnTimer: TLapeTimerProc);
+begin
+  Self^.FOnTimer := @OnTimer;
+end;
+
+function TLapeTimer.GetOnTimer(): TLapeTimerProc;
+begin
+  Result := @Self^.FOnTimer;
 end;
 
 procedure TLapeTimer.TimerProc(argz:Pointer); static;
@@ -79,37 +131,20 @@ var
   t: TDateTime;
   sleepFor: Int32;
 begin
-  while True do
+  while TLapeTimer(argz)^.FEnabled  do
   begin
     t := Now();
-    PLapeTimer(argz)^.FMethod();
-    sleepFor := PLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
+    TLapeTimer(argz)^.FOnTimer();
+    sleepFor := TLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
     if sleepFor > 0 then
       Sleep(sleepFor);
   end;
 end;
 
-procedure TLapeTimer.Terminate();
-var excode: DWORD;
-begin
-  Windows.GetExitCodeThread(Self.FHandle, excode);
-  Windows.TerminateThread(Self.FHandle, excode);
-  Self.FHandle   := 0;
-  Self.FThreadID := 0;
-end;
-
-procedure TLapeTimer.Start();
-begin
-  Windows.ResumeThread(Self.FHandle);
-end;
-
-procedure TLapeTimer.Pause();
-begin
-  Windows.SuspendThread(Self.FHandle);
-end;
 
 
-
+// -----------------------------------------------------------------------------
+// WriteLn that works across threads (not really threadsafe tho)
 var __WRITE_QUEUE: String;
 procedure _Write(str: String); override;
 begin
