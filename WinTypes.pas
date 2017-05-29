@@ -14,7 +14,7 @@ var
   Gdi32:    LibGdi32;
   Kernel32: LibKernel32;
   Msimg32:  LibMsimg32;
-  Advapi32: LibMsimg32;
+  Advapi32: LibAdvapi32;
   Avrt:     LibAvrt;
 
 const
@@ -292,10 +292,16 @@ type
     dwExtraInfo: PtrUInt;
   end; 
 
-
-function MAKELONG(a, b: WORD): DWORD;
+// -------------------------------------------------
+// Windows macros
+function MAKEWORD(bLow, bHigh: Byte): DWORD;
 begin
-  Result := (b shl 16) or a;
+  Result := (bHigh shl 16) or bLow;
+end;
+
+function MAKELONG(wLow, wHigh: WORD): DWORD;
+begin
+  Result := (wHigh shl 16) or wLow;
 end;
 
 function MAKELPARAM(wLow, wHigh: WORD): LPARAM;
@@ -303,8 +309,19 @@ begin
   PtrUInt(Result) := MAKELONG(wLow, wHigh);
 end;
 
+function MAKEWPARAM(wLow, wHigh: WORD): WPARAM;
+begin
+  Result := (wHigh shl 16) or wLow;
+end; 
 
+
+// -------------------------------------------------
+// Windows constants
 const
+  WINFINITE = $FFFFFFFF; //INFINITE
+  CREATE_SUSPENDED = 4;
+  STACK_SIZE_PARAM_IS_A_RESERVATION = $10000;
+  
   // System Metrics
   SM_ARRANGE         = 56;
   SM_CLEANBOOT       = 67;
@@ -544,8 +561,4 @@ const
   SW_SHOWNA          = 8;
   SW_SHOWNOACTIVATE  = 4;
   SW_SHOWNORMAL      = 1;
-  
-  //...
-  CREATE_SUSPENDED = $4;
-  STACK_SIZE_PARAM_IS_A_RESERVATION = $10000;
   
