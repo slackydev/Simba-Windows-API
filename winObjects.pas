@@ -6,8 +6,10 @@
 // BOOL WINAPI CloseHandle(_In_ HANDLE hObject);
 function LibKernel32.CloseHandle(hObject: HANDLE): WINBOOL; static; external 'CloseHandle@kernel32.dll' + WINAPI_CC;
 
+{$IFDEF WIN10+} // Set by the user
 // BOOL WINAPI CompareObjectHandles(_In_ HANDLE hFirstObjectHandle, _In_ HANDLE hSecondObjectHandle);
 function LibKernelbase.CompareObjectHandles(hObject1, hObject2: HANDLE): WINBOOL; static; external 'CompareObjectHandles@kernelbase.dll' + WINAPI_CC;
+{$ENDIF}
 
 // BOOL WINAPI DuplicateHandle(_In_ HANDLE hSourceProcessHandle, _In_ HANDLE hSourceHandle, _In_ HANDLE hTargetProcessHandle, _Out_ LPHANDLE lpTargetHandle, _In_ DWORD dwDesiredAccess, _In_ BOOL bInheritHandle, _In_ DWORD dwOpti
 function LibKernel32.DuplicateHandle(hSrcProcHandle, hSrcHandle, hTargetProcHandle: HANDLE; out hTargetHandle: HANDLE; dwDesiredAccess:DWORD; bInheritHandle:WINBOOL; dwOpti:DWORD): WINBOOL; static; external 'DuplicateHandle@kernel32.dll' + WINAPI_CC;
