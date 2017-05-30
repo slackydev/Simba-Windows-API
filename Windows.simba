@@ -10,7 +10,7 @@ const WINAPI_CC = ' win64';
 
 
 {$include_once winTypes.pas}
-{$include_once winDC.pas}
+{$include_once winObjects.pas}
 {$include_once winIO.pas}
 {$include_once winWindow.pas}
 {$include_once winBitmap.pas}

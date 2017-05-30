@@ -6,6 +6,7 @@ type
   LibMsimg32  = WinDLL; //
   LibAdvapi32 = WinDLL; //
   LibAvrt     = WinDLL; //
+  LibKernelbase = WinDLL; //
   
   
 var
@@ -16,6 +17,7 @@ var
   Msimg32:  LibMsimg32;
   Advapi32: LibAdvapi32;
   Avrt:     LibAvrt;
+  KernelBase: LibKernelbase;
 
 const
   ffi_winapi = {$IFDEF CPU386}ffi_stdcall{$ELSE}ffi_win64{$ENDIF};
@@ -322,7 +324,7 @@ const
   CREATE_SUSPENDED = 4;
   STACK_SIZE_PARAM_IS_A_RESERVATION = $10000;
   
-  // System Metrics
+{SystemMetrics}
   SM_ARRANGE         = 56;
   SM_CLEANBOOT       = 67;
   SM_CMONITORS       = 80;
@@ -419,7 +421,7 @@ const
   SM_XVIRTUALSCREEN  = 76;
   SM_YVIRTUALSCREEN  = 77;
   
-  //GW_   GWL_
+{GetWindow}
   GW_HWNDFIRST    = 0;
   GW_HWNDLAST     = 1;
   GW_HWNDNEXT     = 2;
@@ -427,6 +429,8 @@ const
   GW_OWNER        = 4;
   GW_CHILD        = 5;
   GW_ENABLEDPOPUP = 6;
+
+{GetWindowLong}
   GWL_WNDPROC     = -4;
   GWL_HINSTANCE   = -6;
   GWL_HWNDPARENT  = -8;
@@ -435,7 +439,7 @@ const
   GWL_EXSTYLE     = -20;
   GWL_USERDATA    = -21;
   
-  //WS_
+{WindowStyle}
   WS_OVERLAPPED   = LongInt(0);
   WS_POPUP        = LongInt($80000000);
   WS_CHILD        = LongInt($40000000);
@@ -464,7 +468,7 @@ const
   WS_CHILDWINDOW      = WS_CHILD;
   WS_TILEDWINDOW      = WS_OVERLAPPEDWINDOW;
   
-  //WS_EX_
+{Window Style Extended}
   WS_EX_DLGMODALFRAME  = 1;
   WS_EX_NOPARENTNOTIFY = 4;
   WS_EX_TOPMOST        = 8;
@@ -492,9 +496,8 @@ const
   
   WS_EX_OVERLAPPEDWINDOW = (WS_EX_WINDOWEDGE or WS_EX_CLIENTEDGE);
   WS_EX_PALETTEWINDOW    = (WS_EX_WINDOWEDGE or WS_EX_TOOLWINDOW or WS_EX_TOPMOST);
-  
-  
-  //mouse
+
+{MouseEvent}
   MOUSEEVENTF_ABSOLUTE  = $8000;
   MOUSEEVENTF_LEFTDOWN  = $0002;
   MOUSEEVENTF_LEFTUP    = $0004;
@@ -508,7 +511,7 @@ const
   MOUSEEVENTF_XUP       = $0100;
   MOUSEEVENTF_HWHEEL    = $01000;
 
-  //SWP_
+{SetWindowPos}
   SWP_ASYNCWINDOWPOS = $4000;
   SWP_DEFERERASE     = $2000;
   SWP_DRAWFRAME      = $0020;
@@ -525,7 +528,7 @@ const
   SWP_NOZORDER       = $0004;
   SWP_SHOWWINDOW     = $0040;
   
-  //WM_
+{Keyboard Input Notifications}
   WM_KEYFIRST        = $0100;
   WM_KEYDOWN         = $0100;
   WM_KEYUP           = $0101;
@@ -536,7 +539,6 @@ const
   WM_SYSCHAR         = $0106;
   WM_SYSDEADCHAR     = $0107;
   
-  //WM_ Mouse
   WM_MOUSEFIRST      = $0200;
   WM_MOUSEMOVE       = $0200;
   WM_LBUTTONDOWN     = $0201;
@@ -549,7 +551,7 @@ const
   WM_MBUTTONUP       = $0208;
   WM_MBUTTONDBLCLK   = $0209; 
   
-  //SW_
+{ShowWindow}
   SW_HIDE            = 0;
   SW_MAXIMIZE        = 3;
   SW_MINIMIZE        = 6;
@@ -561,4 +563,31 @@ const
   SW_SHOWNA          = 8;
   SW_SHOWNOACTIVATE  = 4;
   SW_SHOWNORMAL      = 1;
+  
+{process and thread}
+  PROCESS_ALL_ACCESS        = $1F0FFF;
+  PROCESS_TERMINATE         = $0001;
+  PROCESS_CREATE_THREAD     = $0002;
+  PROCESS_VM_OPERATION      = $0008;
+  PROCESS_VM_READ           = $0010;
+  PROCESS_VM_WRITE          = $0020;
+  PROCESS_DUP_HANDLE        = $0040;
+  PROCESS_CREATE_PROCESS    = $0080;
+  PROCESS_SET_QUOTA         = $0100;
+  PROCESS_SET_INFORMATION   = $0200;
+  PROCESS_QUERY_INFORMATION = $0400;
+  PROCESS_SUSPEND_RESUME    = $0800;
+  PROCESS_QUERY_LIMITED_INFORMATION = $1000;
+  
+  THREAD_ALL_ACCESS           = $1F03FF;
+  THREAD_TERMINATE            = $0001;   
+  THREAD_SUSPEND_RESUME       = $0002; 
+  THREAD_GET_CONTEXT          = $0008;
+  THREAD_SET_CONTEXT          = $0010;
+  THREAD_SET_INFORMATION      = $0020;
+  THREAD_QUERY_INFORMATION    = $0040;
+  THREAD_SET_THREAD_TOKEN     = $0080;  
+  THREAD_IMPERSONATE          = $0100;
+  THREAD_DIRECT_IMPERSONATION = $0200; 
+  THREAD_QUERY_LIMITED_INFORMATION = $0800;
   
