@@ -1,27 +1,32 @@
-type
-  WinDLL      = type Pointer; 
-  LibUser32   = WinDLL; //meh... so it's all accessible through "Windows"
-  LibGdi32    = WinDLL; //
-  LibKernel32 = WinDLL; //
-  LibMsimg32  = WinDLL; //
-  LibAdvapi32 = WinDLL; //
-  LibAvrt     = WinDLL; //
-  LibKernelbase = WinDLL; //
-  
-  
-var
-  Windows:  WinDLL;
-  User32:   LibUser32;
-  Gdi32:    LibGdi32;
-  Kernel32: LibKernel32;
-  Msimg32:  LibMsimg32;
-  Advapi32: LibAdvapi32;
-  Avrt:     LibAvrt;
-  KernelBase: LibKernelbase;
+{$IFDEF CPU386}
+const WINAPI_CC = ' stdcall';
+{$ELSE}
+const WINAPI_CC = ' win64';
+{$ENDIF} 
 
+type
+  WinDLL       = type Pointer; 
+  LibUser32    = WinDLL; //meh... so it's all accessible through "Windows"
+  LibGdi32     = WinDLL; //
+  LibKernel32  = WinDLL; //
+  LibMsimg32   = WinDLL; //
+  LibAdvapi32  = WinDLL; //
+  LibAvrt      = WinDLL; //
+  LibKernelbase= WinDLL; //
+
+var
+  Windows:    WinDLL;
+  User32:     LibUser32;
+  Gdi32:      LibGdi32;
+  Kernel32:   LibKernel32;
+  Msimg32:    LibMsimg32;
+  Advapi32:   LibAdvapi32;
+  Avrt:       LibAvrt;
+  KernelBase: LibKernelbase;
+  
 const
   ffi_winapi = {$IFDEF CPU386}ffi_stdcall{$ELSE}ffi_win64{$ENDIF};
-
+  
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
   {$IFNDECL PUInt32}  PUInt32   = ^UInt32;  {$ENDIF}
@@ -246,8 +251,22 @@ type
     bInheritHandle: WINBOOL;
   end;
   
+  PMEMORY_BASIC_INFORMATION = ^MEMORY_BASIC_INFORMATION;
+  MEMORY_BASIC_INFORMATION = record
+    BaseAddress: Pointer;
+    AllocationBase: Pointer;
+    AllocationProtect: DWORD;
+    RegionSize: SizeInt;
+    dwState, dwProtect, dwType: DWORD;
+  end;
+  
   THREAD_START_ROUTINE = procedure(lpParam: Pointer);
   LPTHREAD_START_ROUTINE = native(THREAD_START_ROUTINE, ffi_winapi);
+  
+  TWinVersion = packed record
+    Major, Minor: UInt8; 
+    Build: UInt16;
+  end;
   
   //---| SendInput |----------
   TMouseInput = record
@@ -439,27 +458,27 @@ const
   GWL_EXSTYLE     = -20;
   GWL_USERDATA    = -21;
   
-{WindowStyle}
-  WS_OVERLAPPED   = LongInt(0);
-  WS_POPUP        = LongInt($80000000);
-  WS_CHILD        = LongInt($40000000);
-  WS_MINIMIZE     = LongInt($20000000);
-  WS_VISIBLE      = LongInt($10000000);
-  WS_DISABLED     = LongInt($08000000);
-  WS_CLIPSIBLINGS = LongInt($04000000);
-  WS_CLIPCHILDREN = LongInt($02000000);
-  WS_MAXIMIZE     = LongInt($01000000);
-  WS_CAPTION      = LongInt($00C00000);
-  WS_BORDER       = LongInt($00800000);
-  WS_DLGFRAME     = LongInt($00400000);
-  WS_VSCROLL      = LongInt($00200000);
-  WS_HSCROLL      = LongInt($00100000);
-  WS_SYSMENU      = LongInt($00080000);
-  WS_THICKFRAME   = LongInt($00040000);
-  WS_GROUP        = LongInt($00020000);
-  WS_TABSTOP      = LongInt($00010000);
-  WS_MINIMIZEBOX  = LongInt($00020000);
-  WS_MAXIMIZEBOX  = LongInt($00010000);
+{WindowStyles}
+  WS_OVERLAPPED   = 0;
+  WS_POPUP        = $80000000;
+  WS_CHILD        = $40000000;
+  WS_MINIMIZE     = $20000000;
+  WS_VISIBLE      = $10000000;
+  WS_DISABLED     = $08000000;
+  WS_CLIPSIBLINGS = $04000000;
+  WS_CLIPCHILDREN = $02000000;
+  WS_MAXIMIZE     = $01000000;
+  WS_CAPTION      = $00C00000;
+  WS_BORDER       = $00800000;
+  WS_DLGFRAME     = $00400000;
+  WS_VSCROLL      = $00200000;
+  WS_HSCROLL      = $00100000;
+  WS_SYSMENU      = $00080000;
+  WS_THICKFRAME   = $00040000;
+  WS_GROUP        = $00020000;
+  WS_TABSTOP      = $00010000;
+  WS_MINIMIZEBOX  = $00020000;
+  WS_MAXIMIZEBOX  = $00010000;
   WS_TILED            = WS_OVERLAPPED;
   WS_ICONIC           = WS_MINIMIZE;
   WS_SIZEBOX          = WS_THICKFRAME;
@@ -590,4 +609,14 @@ const
   THREAD_IMPERSONATE          = $0100;
   THREAD_DIRECT_IMPERSONATION = $0200; 
   THREAD_QUERY_LIMITED_INFORMATION = $0800;
-  
+
+begin
+  Windows    := nil;
+  User32     := Windows;
+  Gdi32      := Windows;
+  Kernel32   := Windows;
+  Msimg32    := Windows;
+  Advapi32   := Windows;
+  Avrt       := Windows;
+  KernelBase := Windows;
+end;

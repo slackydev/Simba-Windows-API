@@ -10,7 +10,6 @@ type
   end;
   TSysProcExArr = array of TSysProcEx;
 
-
 function IsVisibleOnDesktop(handle: HWND): Boolean;
 var
   style: LongInt;

@@ -2,13 +2,6 @@
   {$IFDEF HINTS}{$DEFINE !HAD_HINTS}{$HINTS-}{$ENDIF}
 {$ENDIF}
 
-{$IFDEF CPU386}
-const WINAPI_CC = ' stdcall';
-{$ELSE}
-const WINAPI_CC = ' win64';
-{$ENDIF}
-
-
 {$include_once winTypes.pas}
 {$include_once winObjects.pas}
 {$include_once winIO.pas}
@@ -16,7 +9,7 @@ const WINAPI_CC = ' win64';
 {$include_once winBitmap.pas}
 {$include_once winSysinfo.pas}
 {$include_once winProcess.pas}
-
+{$include_once winMemory.pas}
 
 // helper method
 {$IFNDECL GetHandle}

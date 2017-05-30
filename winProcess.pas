@@ -1,4 +1,4 @@
-{$include_once WinTypes.pas}
+{$include_once winTypes.pas}
 //--------------------------------------------------------------------------------------------------------------------\\
 //-----| Processes and Threads  >  Process and Thread Reference  >  Process and Thread Functions  |-------------------||
 //--------------------------------------------------------------------------------------------------------------------//
@@ -217,7 +217,7 @@ function LibKernel32.WinExec(lpCmdLine: LPTSTR; uCmdShow: UInt32): UInt32; stati
 
 
 //--------------------------------------------------------------------------------------------------------------------\\
-//-----| Synchronization  >  Synchronization Reference  >  Synchronization Functions   |------------------------------||
+//-----|  Synchronization  >  Synchronization Reference  >  Synchronization Functions  |------------------------------||
 //--------------------------------------------------------------------------------------------------------------------//
 
 //DWORD WINAPI WaitForSingleObject(_In_ HANDLE hHandle, _In_ DWORD dwMilliseconds);
@@ -228,18 +228,6 @@ function LibKernel32.WaitForSingleObjectEx(H: HANDLE; dwMilliseconds: DWORD; bAl
 
 //DWORD WINAPI WaitForMultipleObjects(_In_ DWORD nCount,_In_ const HANDLE *lpHandles, _In_ BOOL bWaitAll, _In_ DWORD dwMilliseconds);
 function LibKernel32.WaitForMultipleObjects(nCount:DWORD; Handles: ^HANDLE; bWaitAll: WINBOOL; dwMilliseconds: DWORD): DWORD; static; external 'WaitForMultipleObjects@Kernel32.dll' + WINAPI_CC;
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
