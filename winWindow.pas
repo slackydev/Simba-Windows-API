@@ -1,5 +1,16 @@
 {$include_once WinTypes.pas}
 //--------------------------------------------------------------------------------------------------------------------\\
+//-----| Messages and Message Queues  >  Message Reference  >  Message Functions  |-----------------------------------||
+//--------------------------------------------------------------------------------------------------------------------//
+
+// LRESULT WINAPI SendMessage( _In_ HWND   hWnd, _In_ UINT Msg, _In_ WPARAM wParam, _In_ LPARAM lParam);
+function LibUser32.SendMessage(hwnd: HWND; Msg: UInt32; wPar: WPARAM; lPar: LPARAM): LRESULT; static; external 'SendMessageW@User32.dll' + WINAPI_CC;
+
+// LRESULT WINAPI PostMessage( _In_ HWND   hWnd, _In_ UINT Msg, _In_ WPARAM wParam, _In_ LPARAM lParam);
+function LibUser32.PostMessage(hwnd: HWND; Msg: UInt32; wPar: WPARAM; lPar: LPARAM): LRESULT; static; external 'PostMessageW@User32.dll' + WINAPI_CC;
+
+
+//--------------------------------------------------------------------------------------------------------------------\\
 //-----| Windows  >  Window Reference  >  Window Functions  |---------------------------------------------------------||
 //--------------------------------------------------------------------------------------------------------------------//
 
