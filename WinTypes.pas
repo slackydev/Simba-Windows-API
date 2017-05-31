@@ -257,7 +257,7 @@ type
     AllocationBase: Pointer;
     AllocationProtect: DWORD;
     RegionSize: SizeInt;
-    dwState, dwProtect, dwType: DWORD;
+    State, Protect, Typ: DWORD;
   end;
   
   THREAD_START_ROUTINE = procedure(lpParam: Pointer);
@@ -610,6 +610,27 @@ const
   THREAD_DIRECT_IMPERSONATION = $0200; 
   THREAD_QUERY_LIMITED_INFORMATION = $0800;
 
+{memory}
+  MEM_COMMIT     = $00001000;
+  MEM_RESERVE    = $00002000;
+  MEM_RESET      = $00080000;
+  MEM_RESET_UNDO = $01000000;
+  
+{memory protection}
+  PAGE_EXECUTE            = $10;
+  PAGE_EXECUTE_READ       = $20;
+  PAGE_EXECUTE_READWRITE  = $40;
+  PAGE_EXECUTE_WRITECOPY  = $80;
+  PAGE_NOACCESS           = $01;
+  PAGE_READONLY           = $02;
+  PAGE_READWRITE          = $04;
+  PAGE_WRITECOPY          = $08;
+  PAGE_TARGETS_INVALID    = $40000000;
+  PAGE_TARGETS_NO_UPDATE  = $40000000;
+  PAGE_GUARD              = $100;
+  PAGE_NOCACHE            = $200;
+  PAGE_WRITECOMBINE       = $400;
+  
 begin
   Windows    := nil;
   User32     := Windows;

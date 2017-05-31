@@ -189,7 +189,7 @@ end;
 function LibUser32.GetWindowTextLength(wnd: HWND): Int32; static; external 'GetWindowTextLengthA@user32.dll' + WINAPI_CC;
 
 // DWORD WINAPI GetWindowThreadProcessId( _In_ HWND hWnd, _Out_opt_LPDWORD lpdwProcessId);
-function LibUser32.GetWindowThreadProcessId(wnd: HWND; var dwProcessId: DWord): DWord; static; external 'GetWindowThreadProcessId@user32.dll' + WINAPI_CC;
+function LibUser32.GetWindowThreadProcessId(wnd: HWND; out dwProcessId: DWord): DWord; static; external 'GetWindowThreadProcessId@user32.dll' + WINAPI_CC;
 
 // BOOL WINAPI IsChild( _In_ HWND hWndParent, _In_ HWND hWnd);
 function LibUser32.IsChild(hWndParent: HWND; wnd: HWND): BOOL; static; external 'IsChild@user32.dll' + WINAPI_CC;
