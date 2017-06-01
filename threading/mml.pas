@@ -2,19 +2,26 @@
 // Finders uses a shared buffer when building a result TPA, so several threads should
 // never use any such method at the same time, so we have to go into a critical lockdown
 // while it's being used so, so it can not be executed by more than one thread at a time.
-type TMMLFinderLock = type Boolean;
-var MML_FINDER_LOCK: TMMLFinderLock;
+type
+  TMMLFinderThreadQueue = record
+    Queue: array of PtrUInt;
+    IsLocked: Boolean;
+  end;
 
-procedure TMMLFinderLock.WaitForUnlockAndLock();
+var MML_FINDER_THREADQUEUE: TMMLFinderThreadQueue;
+
+procedure TMMLFinderThreadQueue.AcquireLock();
 begin
-  while (Self = True) do Sleep(1);
-  Self := True;
+  Queue += GetCurrThreadID();
+  while (IsLocked) or (Queue[0] <> GetCurrThreadID()) do Sleep(1);
+  IsLocked := True;
+  Delete(Queue, 0, 1);
 end;
 
-procedure TMMLFinderLock.Unlock();
+procedure TMMLFinderThreadQueue.ReleaseLock();
 begin
-  Self := False;
-end;
+  IsLocked := False;
+end; 
 
 
 
@@ -56,9 +63,9 @@ end;
 
 function FindColors(var TPA: TPointArray; Color, x1, y1, x2, y2: Integer): Boolean; override;
 begin
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindColors(TPA, color, x1, y1, x2, y2);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 procedure SetColorToleranceSpeed(cts: Integer); override;
@@ -107,9 +114,9 @@ end;
 
 function FindColorsTolerance(var Points: TPointArray; Color, xs, ys, xe, ye, Tolerance: Integer): Boolean; override;
 begin;
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindColorsTolerance(points,color,xs,ys,xe,ye,tolerance);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 function FindColorSpiral(var x, y: Integer; color, xs, ys, xe, ye: Integer): Boolean; override;
@@ -124,9 +131,9 @@ end;
 
 function FindColorsSpiralTolerance(x, y: Integer; var Points: TPointArray; color, xs, ys, xe, ye: Integer; Tolerance: Integer) : Boolean; override;
 begin
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindColorsSpiralTolerance(x,y,Points,color,xs,ys,xe,ye,tolerance);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 function FindColoredArea(var x, y: Integer; color, xs, ys, xe, ye: Integer; MinArea: Integer): Boolean; override;
@@ -333,9 +340,9 @@ end;
 
 function FindBitmapsSpiralTolerance(bitmap: Integer; x, y: Integer; var Points : TPointArray; xs, ys, xe, ye,tolerance: Integer): Boolean; override;
 begin
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindBitmapsSpiralTolerance(Client.GetMBitmaps().GetBMP(bitmap),x,y,points,xs,ys,xe,ye,tolerance);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 function FindBitmapSpiralTolerance(bitmap: Integer; var x, y: Integer; xs, ys, xe, ye,tolerance : Integer): Boolean; override;
@@ -481,9 +488,9 @@ end;
 
 function FindColorsBitmap(bmp: Integer; var points: TPointArray; const color: Integer): Boolean; override;
 begin;
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMBitmaps().GetBMP(bmp).FindColors(points, color);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 procedure CropBitmap(const bmp: Integer; const xs, ys, xe, ye: Integer); override;
@@ -555,9 +562,9 @@ end;
 
 function FindDTMs(DTM: Integer; var p: TPointArray; xs, ys, xe, ye: Integer): Boolean; override;
 begin
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindDTMs(Client.GetMDTMs().GetDTM(DTM), p, xs, ys, xe, ye);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 function FindDTMRotatedAlternating(DTM: Integer; var x, y: Integer; xs, ys, xe, ye:
@@ -576,18 +583,18 @@ end;
 
 function FindDTMsRotatedAlternating(DTM: Integer; var Points: TPointArray; xs, ys, xe, ye: Integer; sAngle, eAngle, aStep: Extended; var aFound: T2DExtendedArray): Boolean; override;
 begin
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindDTMsRotated(Client.GetMDTMs().GetDTM(DTM), Points, xs, ys, xe, ye,
                                   sAngle, eAngle, aStep, aFound, True);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 function FindDTMsRotatedSE(DTM: Integer; var Points: TPointArray; xs, ys, xe, ye: Integer; sAngle, eAngle, aStep: Extended; var aFound: T2DExtendedArray): Boolean; override;
 begin
-  MML_FINDER_LOCK.WaitForUnlockAndLock();
+  MML_FINDER_THREADQUEUE.AcquireLock();
   Result := Client.GetMFinder().FindDTMsRotated(Client.GetMDTMs().GetDTM(DTM), Points, xs, ys, xe, ye,
                                   sAngle, eAngle, aStep, aFound, False);
-  MML_FINDER_LOCK.Unlock();
+  MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
 procedure SetDTMName(DTM : Integer;const name : string); override;

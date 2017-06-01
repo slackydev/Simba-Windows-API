@@ -630,7 +630,12 @@ const
   PAGE_GUARD              = $100;
   PAGE_NOCACHE            = $200;
   PAGE_WRITECOMBINE       = $400;
+
+{GetExitCodeThread}
+  STILL_ACTIVE = $103; 
+
   
+
 begin
   Windows    := nil;
   User32     := Windows;

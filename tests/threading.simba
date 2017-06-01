@@ -6,7 +6,7 @@ procedure MyThread(argz:Pointer);
 var
   TPA: TPointArray;
 begin
-  while True do
+  while Random(10) <> 0 do
   begin
     FindColorsTolerance(TPA, $000000, 0,0,100,100, 1);
     WriteLn(Length(TPA));
@@ -29,7 +29,7 @@ begin
   thread := TLapeThread.Create(@MyThread, nil);
   thread.Execute();
   wait(1000);
-  thread.Terminate(); //!unsafe
+  thread.WaitFree();
 
 
   WriteLn('--| STARTING TIMER |---------------------');

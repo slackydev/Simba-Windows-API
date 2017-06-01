@@ -2,9 +2,10 @@
 // Could contain mistakes on my part, it's not well tested..
 {$include_once Windows/Windows.simba}
 
-type 
+type
   TLapeThreadProc = LPTHREAD_START_ROUTINE;
-  TLapeThread = record
+  TLapeThread = ^_TLapeThreadRec;
+  _TLapeThreadRec = record
     FHandle: HANDLE;
     FThreadID: DWORD;
     FMethod: TLapeThreadProc;
@@ -13,8 +14,8 @@ type
 
 
   TLapeTimerProc = procedure();
-  TLapeTimer = ^TLapeTimerRec;
-  TLapeTimerRec = record
+  TLapeTimer = ^_TLapeTimerRec;
+  _TLapeTimerRec = record
     FHandle: HANDLE;
     FThreadID: DWORD;
     FOnTimer: TLapeTimerProc;
@@ -28,39 +29,63 @@ type
 //
 function TLapeThread.Create(Method: TLapeThreadProc; Args: Pointer): TLapeThread; static;
 begin
-  Result.FArgs   := Args;
-  Result.FMethod := Method;
-  Result.FHandle := Windows.CreateThread(nil, 0, Result.FMethod, Result.FArgs, CREATE_SUSPENDED, @Result.FThreadID);
+  Result := AllocMem(SizeOf(_TLapeThreadRec));
+  Result^.FArgs   := Args;
+  Result^.FMethod := Method;
+  Result^.FHandle := Windows.CreateThread(nil, 0, Result^.FMethod, Result^.FArgs, CREATE_SUSPENDED, @Result^.FThreadID);
 end;
 
-function TLapeThread.Recreate(): Boolean;
+procedure TLapeThread.WaitFree(maxWait:UInt32 = WINFINITE);
 begin
-  if Self.FHandle <> 0 then Exit(False);
-  Self.FHandle := Windows.CreateThread(nil, 0, Self.FMethod, Self.FArgs, CREATE_SUSPENDED, @Self.FThreadID);
+  Windows.WaitForSingleObject(Self^.FHandle, maxWait);
+  Self.Free();
 end;
 
-procedure TLapeThread.Terminate();
-var excode: DWORD;
+procedure TLapeThread.Free(maxWait:UInt32 = WINFINITE; ForceTerminate:Boolean=False);
+var exitCode: DWORD;
 begin
-  Windows.GetExitCodeThread(Self.FHandle, excode);
-  Windows.TerminateThread(Self.FHandle, excode);
-  Self.FHandle   := 0;
-  Self.FThreadID := 0;
+  Windows.GetExitCodeThread(Self^.FHandle, exitCode);
+  if exitCode = STILL_ACTIVE then
+    if ForceTerminate then
+      Windows.TerminateThread(Self^.FHandle, 0)
+    else
+      raise Format('Thread (%d) is still running', [Self^.FHandle]);
+
+  Windows.CloseHandle(Self^.FHandle);
+  Self^.FHandle   := 0;
+  Self^.FThreadID := 0;
+  FreeMem(Self);
+  Self := nil;
 end;
 
-procedure TLapeThread.Execute();
+procedure TLapeThread.Execute(); constref;
 begin
-  Windows.ResumeThread(Self.FHandle);
+  Assert(self <> nil);
+  Windows.ResumeThread(Self^.FHandle);
 end;
 
-procedure TLapeThread.Suspend();
+procedure TLapeThread.Suspend(); constref;
 begin
-  Windows.SuspendThread(Self.FHandle);
+  Assert(self <> nil);
+  Windows.SuspendThread(Self^.FHandle);
 end;
 
-procedure TLapeThread.Resume();
+procedure TLapeThread.Resume(); constref;
 begin
-  Windows.ResumeThread(Self.FHandle);
+  Assert(self <> nil);
+  Windows.ResumeThread(Self^.FHandle);
+end;
+
+function TLapeThread.Handle(): HANDLE;
+begin
+  Assert(self <> nil);
+  Result := Self^.FHandle;
+end;
+
+function TLapeThread.ThreadID(): DWORD;
+begin
+  Assert(self <> nil);
+  Result := Self^.FThreadID;
 end;
 
 
@@ -70,7 +95,7 @@ end;
 // Interval is just the minimum time between execution of the timer-method.
 function TLapeTimer.Create(OnTimer: TLapeTimerProc; Interval:Int32): TLapeTimer; static;
 begin
-  Result := AllocMem(SizeOf(TLapeTimerRec));
+  Result := AllocMem(SizeOf(_TLapeTimerRec));
   Result^.FOnTimer  := @OnTimer;
   Result^.FInterval := Interval;
   Result^.FEnabled  := True;
@@ -79,50 +104,61 @@ end;
 
 procedure TLapeTimer.Terminate();
 begin
+  Assert(self <> nil);
   Self^.FEnabled  := False;
   Self^.FHandle   := 0;
   Self^.FThreadID := 0;
-  Windows.WaitForSingleObject(Self^.FHandle, $FFFFFFFF);
+  Windows.WaitForSingleObject(Self^.FHandle, WINFINITE);
+  Windows.CloseHandle(Self^.FHandle);
   FreeMem(Self);
+  Self := nil;
 end;
 
 procedure TLapeTimer.Start();
 begin
+  Assert(self <> nil);
   Windows.ResumeThread(Self^.FHandle);
 end;
 
 procedure TLapeTimer.Pause();
 begin
+  Assert(self <> nil);
   Windows.SuspendThread(Self^.FHandle);
 end;
 
 function TLapeTimer.Handle(): HANDLE;
 begin
+  Assert(self <> nil);
   Result := Self^.FHandle;
 end;
 
 function TLapeTimer.ThreadID(): DWORD;
 begin
+  Assert(self <> nil);
   Result := Self^.FThreadID;
 end;
 
 function TLapeTimer.GetInterval(): Int32;
 begin
+  Assert(self <> nil);
   Result := Self^.FInterval;
 end;
 
 procedure TLapeTimer.SetInterval(Value: Int32);
 begin
+  Assert(self <> nil);
   Self^.FInterval := Value;
 end;
 
 procedure TLapeTimer.SetOnTimer(OnTimer: TLapeTimerProc);
 begin
+  Assert(self <> nil);
   Self^.FOnTimer := @OnTimer;
 end;
 
 function TLapeTimer.GetOnTimer(): TLapeTimerProc;
 begin
+  Assert(self <> nil);
   Result := @Self^.FOnTimer;
 end;
 
@@ -145,18 +181,23 @@ end;
 
 // -----------------------------------------------------------------------------
 // WriteLn that works across threads (not really threadsafe tho)
-var __WRITE_QUEUE: String;
+var __WRITE_QUEUE: TStringArray;
 procedure _Write(str: String); override;
 begin
   __WRITE_QUEUE += str;
 end;
+
 procedure _writeln; override;
+var
+  q: TStringArray;
 begin
-  client.WriteLn(__WRITE_QUEUE);
+  q := __WRITE_QUEUE;
   __WRITE_QUEUE := [];
+  client.WriteLn(Implode(#13#10, q));
 end;
 
 
 {$IFDEF THREADED_MML}
 {$include_once threading/mml.pas}
 {$ENDIF}
+
