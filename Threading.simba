@@ -52,8 +52,6 @@ begin
       raise Format('Thread (%d) is still running', [Self^.FHandle]);
 
   Windows.CloseHandle(Self^.FHandle);
-  Self^.FHandle   := 0;
-  Self^.FThreadID := 0;
   FreeMem(Self);
   Self := nil;
 end;
