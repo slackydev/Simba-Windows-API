@@ -68,7 +68,7 @@ begin
 end;
 
 //BOOL WINAPI GetExitCodeProcess( _In_  HANDLE  hThread, _Out_ LPDWORD lpExitCode);
-function LibKernel32.GetExitCodeProcess(hThread: HANDLE; out ExitCode: DWORD): BOOL; static; external 'GetExitCodeProcess@Kernel32.dll stdcall'
+function LibKernel32.GetExitCodeProcess(hThread: HANDLE; out ExitCode: DWORD): BOOL; static; external 'GetExitCodeProcess@Kernel32.dll' + WINAPI_CC;
 
 //BOOL WINAPI GetExitCodeThread( _In_  HANDLE  hThread, _Out_ LPDWORD lpExitCode); [@Kernel32.dll]
 function LibKernel32.GetExitCodeThread(hThread: HANDLE; out ExitCode: DWORD): BOOL; static; external 'GetExitCodeThread@Kernel32.dll' + WINAPI_CC;
