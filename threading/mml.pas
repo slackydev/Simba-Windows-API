@@ -812,8 +812,9 @@ begin;
 end;
 
 function SetTargetArray(P: Integer; w, h: Integer): Integer; override;
+var _p:PtrUInt := P;
 begin
-  result:= Client.GetIOManager().SetTarget(PRGB32(P), Point(w,h));
+  result:= Client.GetIOManager().SetTarget(PRGB32(_P), Point(w,h));
 end;
 
 function SetTargetBitmap(bitmap: Integer): Integer; override;

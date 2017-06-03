@@ -8,7 +8,7 @@ var
 begin
   while Random(10) <> 0 do
   begin
-    FindColorsTolerance(TPA, $000000, 0,0,100,100, 1);
+    FindColorsTolerance(TPA, $000000, 0,0,100,100, 0);
     WriteLn(Length(TPA));
     Sleep(100);
   end;
@@ -30,7 +30,6 @@ begin
   thread.Execute();
   wait(1000);
   thread.WaitFree();
-
 
   WriteLn('--| STARTING TIMER |---------------------');
   timer := TLapeTimer.Create(@MyTimerMethod, 100);

@@ -106,8 +106,6 @@ procedure TLapeTimer.Terminate();
 begin
   Assert(self <> nil);
   Self^.FEnabled  := False;
-  Self^.FHandle   := 0;
-  Self^.FThreadID := 0;
   Windows.WaitForSingleObject(Self^.FHandle, WINFINITE);
   Windows.CloseHandle(Self^.FHandle);
   FreeMem(Self);
