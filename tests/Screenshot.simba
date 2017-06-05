@@ -15,7 +15,7 @@ begin
   bmp := Windows.CreateCompatibleBitmap(winDC, W,H);
   try
     Windows.SelectObject(cDC, bmp);
-    Windows.BitBlt(cDC, 0,0, W,H, winDC, B.x1,B.y1, 13369376);
+    Windows.BitBlt(cDC, 0,0, W,H, winDC, B.x1,B.y1, SRCCOPY);
 
     Result.Init(client.GetMBitmaps);
     Result.SetSize(W,H);
@@ -31,7 +31,7 @@ end;
 var
   bmp:TMufasaBitmap;
 begin
-  bmp := Screenshot(Windows.GetDesktopWindow(), [0,0,500,500]);
+  bmp := Screenshot(GetClientHandle(), [0,0,500,500]);
 
   DisplayDebugImgWindow(bmp.GetWidth,bmp.GetHeight);
   DrawBitmapDebugImg(bmp.GetIndex());

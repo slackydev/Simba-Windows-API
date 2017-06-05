@@ -35,13 +35,13 @@ begin
   Result^.FHandle := Windows.CreateThread(nil, 0, Result^.FMethod, Result^.FArgs, CREATE_SUSPENDED, @Result^.FThreadID);
 end;
 
-procedure TLapeThread.WaitFree(maxWait:UInt32 = WINFINITE);
+procedure TLapeThread.WaitFree(maxWait:UInt32 = WINFINITE; ForceTerminate:Boolean=False);
 begin
   Windows.WaitForSingleObject(Self^.FHandle, maxWait);
-  Self.Free();
+  Self.Free(ForceTerminate);
 end;
 
-procedure TLapeThread.Free(maxWait:UInt32 = WINFINITE; ForceTerminate:Boolean=False);
+procedure TLapeThread.Free(ForceTerminate:Boolean=False);
 var exitCode: DWORD;
 begin
   Windows.GetExitCodeThread(Self^.FHandle, exitCode);
@@ -163,13 +163,17 @@ var
   t: TDateTime;
   sleepFor: Int32;
 begin
-  while TLapeTimer(argz)^.FEnabled  do
+  while TLapeTimer(argz)^.FEnabled do
   begin
     t := Now();
     TLapeTimer(argz)^.FOnTimer();
     sleepFor := TLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
-    if sleepFor > 0 then
-      Sleep(sleepFor);
+    
+    while (sleepFor > 0) and (TLapeTimer(argz)^.FEnabled) do
+    begin
+      Sleep(Min(sleepFor, 100));
+      sleepFor := TLapeTimer(argz)^.FInterval - Trunc((Now()-t)*86400000);
+    end;
   end;
 end;
 

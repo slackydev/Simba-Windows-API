@@ -634,7 +634,23 @@ const
 {GetExitCodeThread}
   STILL_ACTIVE = $103; 
 
-  
+{ BitBlt }
+   BLACKNESS   = $00000042;
+   NOTSRCERASE = $001100A6;
+   NOTSRCCOPY  = $00330008;
+   SRCERASE    = $00440328;
+   DSTINVERT   = $00550009;
+   PATINVERT   = $005A0049;
+   SRCINVERT   = $00660046;
+   SRCAND      = $008800C6;
+   MERGEPAINT  = $00BB0226;
+   MERGECOPY   = $00C000CA;
+   SRCCOPY     = $00CC0020;
+   SRCPAINT    = $00EE0086;
+   PATCOPY     = $00F00021;
+   PATPAINT    = $00FB0A09;
+   WHITENESS   = $00FF0062;
+
 
 begin
   Windows    := nil;

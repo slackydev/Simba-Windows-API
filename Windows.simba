@@ -19,6 +19,11 @@ begin
   for proc in GetProcesses() do
     if Pos(Str, proc.Title) then Exit(Handle(proc.Handle));
 end;
+
+function GetClientHandle(): HWND; overload;
+begin
+  Result := client.GetIOManager.GetImageTarget().GetHandle();
+end;
 {$ENDIF}
 
 {$IFDEF !HAD_HINTS}{$HINTS+}{$ENDIF}
