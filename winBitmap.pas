@@ -109,4 +109,32 @@ function LibMsimg32.TransparentBlt(dc: HDC): BOOL; static; external 'Transparent
 *)
 
 
+//--------------------------------------------------------------------------------------------------------------------\\
+//-----| Misc functions  |--------------------------------------------------------------------------------------------||
+//--------------------------------------------------------------------------------------------------------------------//
+
+// DWORD GetObjectType(_In_ HGDIOBJ h);
+function LibGdi32.GetObjectType(h: HGDIOBJ): DWORD; static; external 'GetObjectType@gdi32.dll' + WINAPI_CC;
+
+// int WINAPI ChoosePixelFormat(HDC hdc,const PIXELFORMATDESCRIPTOR *ppfd);
+function LibGdi32.ChoosePixelFormat(dc: HDC; ppfd: ^PIXELFORMATDESCRIPTOR): Int32; static; external 'ChoosePixelFormat@gdi32.dll' + WINAPI_CC;
+
+// int WINAPI GetPixelFormat(HDC hdc, PIXELFORMATDESCRIPTOR *ppfd);
+function LibGdi32.GetPixelFormat(dc: HDC): Int32; static; external 'GetPixelFormat@gdi32.dll' + WINAPI_CC;
+
+// BOOL WINAPI SetPixelFormat(HDC hdc, int iPixelFormat, PIXELFORMATDESCRIPTOR *ppfd);
+function LibGdi32.SetPixelFormat(dc: HDC; iPixelFormat:Int32; ppfd: ^PIXELFORMATDESCRIPTOR): WINBOOL; static; external 'SetPixelFormat@gdi32.dll' + WINAPI_CC;
+
+// int WINAPI DescribePixelFormat(HDC hdc,int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
+function LibGdi32.DescribePixelFormat(dc: HDC; iPixelFormat:Int32; nBytes:UInt32; ppfd: ^PIXELFORMATDESCRIPTOR): Int32; static; external 'DescribePixelFormat@gdi32.dll' + WINAPI_CC;
+
+
+
+
+
+
+
+
+
+
 

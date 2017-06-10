@@ -1,4 +1,11 @@
 {$include_once WinTypes.pas}
+
+//--------------------------------------------------------------------------------------------------------------------\\
+//-----| Error Handling  >  Error Handling Reference  >  Error Handling Functions |-----------------------------------||
+//--------------------------------------------------------------------------------------------------------------------//
+function LibKernel32.GetLastError(): DWORD; static; external 'GetLastError@Kernel32.dll' + WINAPI_CC;
+
+
 //--------------------------------------------------------------------------------------------------------------------\\
 //-----| System Information  >  System Information Reference  >  System Information Functions  |----------------------||
 //--------------------------------------------------------------------------------------------------------------------//
@@ -80,4 +87,3 @@ function LibKernel32.QueryPerformanceCounter(var PerformanceCount: UInt64): BOOL
 
 // BOOL WINAPI QueryPerformanceFrequency( _Out_LARGE_INTEGER *lpFrequency); [@Kernel32.dll]
 function LibKernel32.QueryPerformanceFrequency(var Frequency: UInt64): BOOL; static; external 'QueryPerformanceFrequency@Kernel32.dll' + WINAPI_CC;
-

@@ -260,6 +260,35 @@ type
     State, Protect, Typ: DWORD;
   end;
   
+  PIXELFORMATDESCRIPTOR = record
+    nSize: WORD;
+    nVersion: WORD;
+    dwFlags: DWORD ;
+    iPixelType: BYTE;
+    cColorBits: BYTE;
+    cRedBits: BYTE;
+    cRedShift: BYTE;
+    cGreenBits: BYTE;
+    cGreenShift: BYTE;
+    cBlueBits: BYTE;
+    cBlueShift: BYTE;
+    cAlphaBits: BYTE;
+    cAlphaShift: BYTE;
+    cAccumBits: BYTE;
+    cAccumRedBits: BYTE;
+    cAccumGreenBits: BYTE;
+    cAccumBlueBits: BYTE;
+    cAccumAlphaBits: BYTE;
+    cDepthBits: BYTE;
+    cStencilBits: BYTE;
+    cAuxBuffers: BYTE;
+    iLayerType: BYTE;
+    bReserved: BYTE;
+    dwLayerMask: DWORD;
+    dwVisibleMask: DWORD;
+    dwDamageMask: DWORD;
+  end;
+  
   THREAD_START_ROUTINE = procedure(lpParam: Pointer);
   LPTHREAD_START_ROUTINE = native(THREAD_START_ROUTINE, ffi_winapi);
   
@@ -651,7 +680,35 @@ const
    PATPAINT    = $00FB0A09;
    WHITENESS   = $00FF0062;
 
-
+{ChoosePixelFormat}
+  PFD_DOUBLEBUFFER = $1;
+  PFD_STEREO = $2;
+  PFD_DRAW_TO_WINDOW = $4;
+  PFD_DRAW_TO_BITMAP = $8;
+  PFD_SUPPORT_GDI = $10;
+  PFD_SUPPORT_OPENGL = $20;
+  PFD_DEPTH_DONTCARE = $20000000;
+  PFD_DOUBLEBUFFER_DONTCARE = $40000000;
+  PFD_STEREO_DONTCARE = $80000000;
+  PFD_TYPE_RGBA = 0;
+  PFD_TYPE_COLORINDEX = 1;
+  PFD_MAIN_PLANE = 0;
+  PFD_OVERLAY_PLANE = 1;
+  PFD_UNDERLAY_PLANE = -(1);
+ 
+{PIXELFORMATDESCRIPTOR structure}
+  PFD_GENERIC_FORMAT = $40;
+  PFD_NEED_PALETTE = $80;
+  PFD_NEED_SYSTEM_PALETTE = $100;
+  PFD_SWAP_EXCHANGE = $200;
+  PFD_SWAP_COPY = $400;
+  PFD_SWAP_LAYER_BUFFERS = $800;
+  PFD_GENERIC_ACCELERATED = $1000;
+  PFD_SUPPORT_DIRECTDRAW = $2000;
+  PFD_DIRECT3D_ACCELERATED = $4000;
+  PFD_SUPPORT_COMPOSITION = $8000; 
+   
+   
 begin
   Windows    := nil;
   User32     := Windows;

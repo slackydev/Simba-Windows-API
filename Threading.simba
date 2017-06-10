@@ -182,7 +182,7 @@ end;
 // -----------------------------------------------------------------------------
 // WriteLn that works across threads (not really threadsafe tho)
 var __WRITE_QUEUE: TStringArray;
-procedure _Write(str: String); override;
+procedure _write(str: String); override;
 begin
   __WRITE_QUEUE += str;
 end;
