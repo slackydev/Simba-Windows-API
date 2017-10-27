@@ -26,7 +26,13 @@ var
   
 const
   ffi_winapi = {$IFDEF CPU386}ffi_stdcall{$ELSE}ffi_win64{$ENDIF};
-  
+
+
+const
+  MAX_PATH = 260;
+  MAX_MODULE_NAME32 = 255;
+
+
 type
   {$IFNDECL PWideChar}PWideChar = ^WideChar;{$ENDIF}
   {$IFNDECL PUInt32}  PUInt32   = ^UInt32;  {$ENDIF}
@@ -259,7 +265,35 @@ type
     RegionSize: SizeInt;
     State, Protect, Typ: DWORD;
   end;
-  
+
+  PPROCESSENTRY32 = ^PROCESSENTRY32;
+  PROCESSENTRY32 = record
+    dwSize: DWORD;
+    cntUsage: DWORD;
+    th32ProcessID: DWORD;
+    th32DefaultHeapID: PtrUInt;
+    th32ModuleID: DWORD;
+    cntThreads: DWORD;
+    th32ParentProcessID: DWORD;
+    pcPriClassBase: LongInt;
+    dwFlags: DWORD;
+    szExeFile: array[0..MAX_PATH] of Char;
+  end;
+
+  PMODULEENTRY32 = ^MODULEENTRY32;
+  MODULEENTRY32 = record
+    dwSize: DWORD;
+    th32ModuleID: DWORD;
+    th32ProcessID: DWORD;
+    GlblcntUsage: DWORD;
+    ProccntUsage: DWORD;
+    modBaseAddr: ^BYTE;
+    modBaseSize: DWORD;
+    hModule: HMODULE;
+    szModule:  array[0..MAX_MODULE_NAME32 + 1] of Char;
+    szExePath: array[0..MAX_PATH] of Char;
+  end;
+
   PIXELFORMATDESCRIPTOR = record
     nSize: WORD;
     nVersion: WORD;
@@ -707,7 +741,17 @@ const
   PFD_SUPPORT_DIRECTDRAW = $2000;
   PFD_DIRECT3D_ACCELERATED = $4000;
   PFD_SUPPORT_COMPOSITION = $8000; 
-   
+
+
+{CreateToolhelp32Snapshot function}
+  TH32CS_INHERIT      = $80000000;
+  TH32CS_SNAPHEAPLIST = $00000001;
+  TH32CS_SNAPMODULE   = $00000008;
+  TH32CS_SNAPMODULE32 = $00000010;
+  TH32CS_SNAPPROCESS  = $00000002;
+  TH32CS_SNAPTHREAD   = $00000004;
+  TH32CS_SNAPALL      = TH32CS_SNAPHEAPLIST or TH32CS_SNAPMODULE or TH32CS_SNAPPROCESS or TH32CS_SNAPTHREAD;
+
    
 begin
   Windows    := nil;

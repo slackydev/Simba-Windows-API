@@ -231,3 +231,23 @@ function LibKernel32.WaitForMultipleObjects(nCount:DWORD; Handles: ^HANDLE; bWai
 
 
 
+//--------------------------------------------------------------------------------------------------------------------\\
+//-----| Tool Help Library  >  Tool Help Reference  >   Tool Help Functions   |---------------------------------------||
+//--------------------------------------------------------------------------------------------------------------------//
+
+//HANDLE WINAPI CreateToolhelp32Snapshot(_In_ DWORD dwFlags, _In_ DWORD th32ProcessID); [@Kernel32.dll]
+function LibKernel32.CreateToolhelp32Snapshot(dwFlags: DWORD; th32ProcessID: DWORD): HANDLE; static; external 'CreateToolhelp32Snapshot@Kernel32.dll' + WINAPI_CC;
+
+//BOOL WINAPI Process32First(_In_ HANDLE hSnapshot, _Inout_ LPPROCESSENTRY32 lppe);
+function LibKernel32.Process32First(hSnapshot: HANDLE; var lppe:PROCESSENTRY32): BOOL; static; external 'Process32First@Kernel32.dll' + WINAPI_CC;
+
+//BOOL WINAPI Process32Next(_In_ HANDLE hSnapshot, _Inout_ LPPROCESSENTRY32 lppe);
+function LibKernel32.Process32Next(hSnapshot: HANDLE; var lppe:PROCESSENTRY32): BOOL; static; external 'Process32Next@Kernel32.dll' + WINAPI_CC;
+
+//BOOL WINAPI Module32First(_In_ HANDLE hSnapshot, _Inout_ LPMODULEENTRY32 lpme);
+function LibKernel32.Module32First(hSnapshot: HANDLE; var lpme:MODULEENTRY32): BOOL; static; external 'Module32First@Kernel32.dll' + WINAPI_CC;
+
+//BOOL WINAPI Module32Next(_In_ HANDLE hSnapshot, _Inout_ LPMODULEENTRY32 lpme);
+function LibKernel32.Module32Next(hSnapshot: HANDLE; var lpme:MODULEENTRY32): BOOL; static; external 'Module32Next@Kernel32.dll' + WINAPI_CC;
+
+
