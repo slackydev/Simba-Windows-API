@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------------
 // Finders uses a shared buffer when building a result TPA, so several threads should
 // never use any such method at the same time, so we have to go into a critical lockdown
-// while it's being used so, so it can not be executed by more than one thread at a time.
+// while it's being used, so that it can not be executed by more than one thread at a time.
 type
   TMMLFinderThreadQueue = record
     Queue: array of PtrUInt;
@@ -29,7 +29,7 @@ end;
 var __ThreadQueueStr: array of record TID:PtrUInt; TXT:string; end;
 procedure _write(str: String); override;
 var 
-  i:Int32;
+  i: Int32;
   TID: PtrUInt := GetCurrThreadID();
 begin
   for i:=0 to High(__ThreadQueueStr) do
@@ -349,8 +349,8 @@ end;
 
 function BitmapFromClient(const xs, ys, xe, ye: Integer): Integer; override;
 begin;
-  result := Client.GetMBitmaps().CreateBMP(0,0);
-  Client.GetMBitmaps().GetBMP(result).CopyClientToBitmap(Client.GetIOManager(),True,xs,ys,xe,ye);
+  Result := Client.GetMBitmaps().CreateBMP(0,0);
+  Client.GetMBitmaps().GetBMP(Result).CopyClientToBitmap(Client.GetIOManager(),True,xs,ys,xe,ye);
 end;
 
 function FindBitmap(Bitmap: Integer; var x, y: Integer): Boolean; override;
@@ -399,7 +399,7 @@ function Desaturate(Bitmap : Integer) : Integer; override;
 begin;
   with Client.GetMBitmaps() do
   begin;
-    result := CreateBMP(0,0);
+    Result := CreateBMP(0,0);
     GetBmp(Bitmap).Desaturate(GetBmp(Result));
   end;
 end;
@@ -411,7 +411,7 @@ end;
 
 function CopyBitmap(Bitmap : Integer) : Integer; override;
 begin;
-  result := Client.GetMBitmaps().CopyBMP(bitmap);
+  Result := Client.GetMBitmaps().CopyBMP(bitmap);
 end;
 
 function GreyScaleBitmap(Bitmap : Integer) : Integer; override;
@@ -419,7 +419,7 @@ begin;
   with Client.GetMBitmaps() do
   begin;
     Result := CreateBMP(0,0);
-    GetBmp(Bitmap).GreyScale(GetBmp(result));
+    GetBmp(Bitmap).GreyScale(GetBmp(Result));
   end;
 end;
 
@@ -428,15 +428,15 @@ begin;
   with Client.GetMBitmaps() do
   begin;
     Result := CreateBMP(0,0);
-    GetBmp(Bitmap).Brightness(GetBmp(result),br);
+    GetBmp(Bitmap).Brightness(GetBmp(Result),br);
   end;
 end;
 function ContrastBitmap(bitmap: Integer; co: Extended) : Integer; override;
 begin;
   with Client.GetMBitmaps() do
   begin;
-    result := CreateBMP(0,0);
-    GetBmp(Bitmap).Contrast(GetBmp(result),co);
+    Result := CreateBMP(0,0);
+    GetBmp(Bitmap).Contrast(GetBmp(Result),co);
   end;
 end;
 
@@ -445,7 +445,7 @@ begin;
   with Client.GetMBitmaps() do
   begin
     Result := CreateBMP(0,0);
-    GetBmp(bitmap).Posterize(GetBmp(result),po);
+    GetBmp(bitmap).Posterize(GetBmp(Result),po);
   end;
 end;
 
@@ -468,7 +468,7 @@ function FindDeformedBitmapToleranceIn(bitmap: Integer; var x,
   y: Integer; xs, ys, xe, ye: Integer; tolerance: Integer; Range: Integer;
   AllowPartialAccuracy: Boolean; var accuracy: Extended): Boolean; override;
 begin;
-  result := Client.GetMFinder().FindDeformedBitmapToleranceIn(Client.GetMBitmaps().GetBMP(Bitmap),x,y,xs,ys,xe,ye,tolerance,range,AllowPartialAccuracy,accuracy);
+  Result := Client.GetMFinder().FindDeformedBitmapToleranceIn(Client.GetMBitmaps().GetBMP(Bitmap),x,y,xs,ys,xe,ye,tolerance,range,AllowPartialAccuracy,accuracy);
 end;
 
 procedure RectangleBitmap(bitmap: Integer; const box: TBox; Color: TColor); override;
@@ -485,7 +485,7 @@ function ConvoluteBitmap(bitmap: Integer; matrix: T2DExtendedArray) : Integer; o
 begin
   with Client.GetMBitmaps() do
   begin
-    result := CreateBMP(0,0);
+    Result := CreateBMP(0,0);
     GetBmp(bitmap).Convolute(GetBmp(Result),matrix);
   end;
 end;
@@ -549,13 +549,13 @@ end;
 function CalculatePixelTolerance(Bmp1,Bmp2 : Integer; CompareBox : TBox; CTS : Integer): extended; override;
 begin
   with Client.GetMBitmaps() do
-    result := CalculatePixelTolerance(GetBMP(bmp1),GetBMP(bmp2),comparebox,cts);
+    Result := CalculatePixelTolerance(GetBMP(bmp1),GetBMP(bmp2),comparebox,cts);
 end;
 
 function CalculatePixelToleranceTPA(Bmp1,Bmp2 : Integer; CPoints: TPointArray; CTS : Integer): extended; override;
 begin
   with Client.GetMBitmaps() do
-    result := CalculatePixelToleranceTPA(GetBMP(bmp1),GetBMP(bmp2),CPoints,cts);
+    Result := CalculatePixelToleranceTPA(GetBMP(bmp1),GetBMP(bmp2),CPoints,cts);
 end;
 *)
 
@@ -579,12 +579,12 @@ end;
 
 function GetColorsBitmap(const bmp: Integer): TIntegerArray; override;
 begin
-  result := Client.GetMBitmaps().GetBMP(bmp).GetColors();
+  Result := Client.GetMBitmaps().GetBMP(bmp).GetColors();
 end;
 
 function BitmapToMatrix(const bmp: Integer): T2DIntegerArray; override;
 begin
-  result := Client.GetMBitmaps().GetBMP(bmp).ToMatrix();
+  Result := Client.GetMBitmaps().GetBMP(bmp).ToMatrix();
 end;
 
 procedure DrawMatrixBitmap(const bmp: Integer; const matrix: T2DIntegerArray); override;
@@ -676,7 +676,7 @@ begin
   MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
-procedure SetDTMName(DTM : Integer;const name : string); override;
+procedure SetDTMName(DTM: Integer; const name: string); override;
 begin
   Client.GetMDTMs.GetDTM(DTM).SetName(Name);
 end;
@@ -693,7 +693,7 @@ end;
 
 function GetDTM(index: Integer) : TMDTM; override;
 begin
-  result := Client.GetMDTMs().GetDTM(Index);
+  Result := Client.GetMDTMs().GetDTM(Index);
 end;
 
 function AddSDTM(const d: TSDTM): Integer; override;
@@ -708,13 +708,13 @@ end;
 
 function SDTMToMDTM(Const DTM: TSDTM): TMDTM; override;
 begin
-  result := SDTMToMDTM(DTM);
-  Client.GetMDTMs().AddDTM(result);
+  Result := SDTMToMDTM(DTM);
+  Client.GetMDTMs().AddDTM(Result);
 end;
 
-function DTMExists(index : Integer) : Boolean; override;
+function DTMExists(index: Integer) : Boolean; override;
 begin
-  result := Client.GetMDTMs().ExistsDTM(index);
+  Result := Client.GetMDTMs().ExistsDTM(index);
 end;
 
 
@@ -735,7 +735,7 @@ begin
    Client.GetIOManager().GetMousePos(X, Y);
 end;
 
-function __ConvIntClickType(x : Integer) : TClickType;
+function __ConvIntClickType(x: Integer) : TClickType;
 begin;
   case x of
     0: Result := mouse_Right;
@@ -763,7 +763,7 @@ end;
 
 function IsMouseButtonDown(button : Integer) : Boolean; override;
 begin
-  result := Client.GetIOManager().IsMouseButtonDown(__ConvIntClickType(button));
+  Result := Client.GetIOManager().IsMouseButtonDown(__ConvIntClickType(button));
 end;
 
 
@@ -874,7 +874,7 @@ end;
 
 function ReadINI(const Section, KeyName, FileName: string): string; override;
 begin;
-  result := Client.GetMFiles().ReadINI(Section, KeyName, FileName);
+  Result := Client.GetMFiles().ReadINI(Section, KeyName, FileName);
 end;
 
 procedure DeleteINI(const Section, KeyName, FileName: string); override;
@@ -893,22 +893,22 @@ end;
 function SetTargetArray(P: Integer; w, h: Integer): Integer; override;
 var _p:PtrUInt := P;
 begin
-  result:= Client.GetIOManager().SetTarget(PRGB32(_P), Point(w,h));
+  Result := Client.GetIOManager().SetTarget(PRGB32(_P), Point(w,h));
 end;
 
 function SetTargetBitmap(bitmap: Integer): Integer; override;
 begin;
-  result:= Client.GetIOManager().SetTarget(Client.GetMBitmaps.GetBMP(Bitmap));
+  Result := Client.GetIOManager().SetTarget(Client.GetMBitmaps.GetBMP(Bitmap));
 end;
 
 function SetEIOSTarget(name, args: String): Integer; override;
 begin
-  result:= Client.GetIOManager().SetTarget(name, args);
+  Result := Client.GetIOManager().SetTarget(name, args);
 end;
 
 function MouseSetClientArea(x1, y1, x2, y2: Integer): Boolean; override;
 begin
-  result := Client.GetIOManager().MouseSetClientArea(x1, y1, x2, y2);
+  Result := Client.GetIOManager().MouseSetClientArea(x1, y1, x2, y2);
 end;
 
 procedure MouseResetClientArea(); override;
@@ -918,7 +918,7 @@ end;
 
 function ImageSetClientArea(x1, y1, x2, y2: Integer): boolean; override;
 begin
-  result := Client.GetIOManager().ImageSetClientArea(x1, y1, x2, y2);
+  Result := Client.GetIOManager().ImageSetClientArea(x1, y1, x2, y2);
 end;
 
 procedure ImageResetClientArea(); override;
@@ -974,13 +974,13 @@ end;
 function Freeze: Boolean; override;
 begin
   Client.GetIOManager().SetFrozen(True);
-  result := true; //dunno what the result is supposed to mean
+  Result := True; //dunno what the result is supposed to mean
 end;
 
 function Unfreeze: Boolean; override;
 begin
   Client.GetIOManager().SetFrozen(False);
-  result := True; //dunno what the result is supposed to mean
+  Result := True; //dunno what the result is supposed to mean
 end;
 
 procedure ActivateClient(); override;
@@ -990,11 +990,11 @@ end;
 
 function IsTargetValid: Boolean; override;
 begin
-  result:= Client.GetIOManager().TargetValid();
+  Result := Client.GetIOManager().TargetValid();
 end;
 
 function GetNativeWindow: Integer; override;
 begin
-  result := Client.GetIOManager().GetImageTarget.GetHandle();
+  Result := Client.GetIOManager().GetImageTarget.GetHandle();
 end;
 
