@@ -129,7 +129,7 @@ begin
   Client.GetMFinder().SetToleranceSpeed3Modifier(Modifier);
 end;
 
-function GetToleranceSpeed3Modifier: extended; override;
+function GetToleranceSpeed3Modifier(): Extended; override;
 begin
   Result := Client.GetMFinder().GetToleranceSpeed3Modifier();
 end;
@@ -238,7 +238,7 @@ begin;
     raise Format('Wrong Width or Height in SetBitmapSize: (%d,%d)',[NewW,NewH]);
 end;
 
-procedure StretchBitmapResize(Bmp,NewW,NewH : Integer); override;
+procedure StretchBitmapResize(Bmp,NewW,NewH: Integer); override;
 begin;
   if (NewW>=0) and (NewH >=0) then
     Client.GetMBitmaps().GetBMP(Bmp).StretchResize(NewW,NewH)
@@ -252,27 +252,27 @@ begin;
   BmpH := Client.GetMBitmaps().GetBMP(bmp).GetWidth();
 end;
 
-procedure SetBitmapName(Bmp : Integer; name : string); override;
+procedure SetBitmapName(Bmp: Integer; name: string); override;
 begin;
   Client.GetMBitmaps().GetBMP(Bmp).SetName(name);
 end;
 
-function CreateMirroredBitmap(Bmp : Integer) : Integer; override;
+function CreateMirroredBitmap(Bmp: Integer): Integer; override;
 begin;
   Result := Client.GetMBitmaps().CreateMirroredBitmap(Bmp, MirrorWidth);
 end;
 
-function CreateMirroredBitmapEx(Bmp : Integer; MirrorStyle : TBmpMirrorStyle) : Integer; override;
+function CreateMirroredBitmapEx(Bmp: Integer; MirrorStyle : TBmpMirrorStyle) : Integer; override;
 begin;
   Result := Client.GetMBitmaps().CreateMirroredBitmap(Bmp,MirrorStyle);
 end;
 
-function FastGetPixel(bmp,x,y : Integer) : LongWord; override;
+function FastGetPixel(bmp, x,y: Integer) : LongWord; override;
 begin;
   Result := Client.GetMBitmaps().GetBMP(Bmp).GetPixel(x,y);
 end;
 
-function FastGetPixels(bmp : Integer; TPA : TPointArray) : TIntegerArray; override;
+function FastGetPixels(bmp: Integer; TPA: TPointArray) : TIntegerArray; override;
 begin;
   Result := Client.GetMBitmaps().GetBMP(Bmp).GetPixels(TPA);
 end;
@@ -282,32 +282,32 @@ begin
   Result := Client.GetMBitmaps().GetBMP(bmp).GetAreaColors(xs,ys,xe,ye);
 end;
 
-procedure FastSetPixel(Bmp,x,y : Integer; Color : TColor); override;
+procedure FastSetPixel(Bmp,x,y: Integer; Color: TColor); override;
 begin
   Client.GetMBitmaps().GetBMP(bmp).SetPixel(x,y,color);
 end;
 
-procedure FastSetPixels(Bmp : Integer; TPA : TPointArray; Colors : TIntegerArray); override;
+procedure FastSetPixels(Bmp: Integer; TPA: TPointArray; Colors: TIntegerArray); override;
 begin;
   Client.GetMBitmaps().GetBMP(Bmp).SetPixels(TPA,Colors);
 end;
 
-procedure DrawTPABitmap(bitmap : Integer; TPA : TPointArray; Color : Integer); override;
+procedure DrawTPABitmap(bitmap: Integer; TPA: TPointArray; Color: Integer); override;
 begin
   Client.GetMBitmaps().GetBMP(Bitmap).DrawTPA(TPA,Color);
 end;
 
-procedure DrawATPABitmap(bitmap : Integer; ATPA : T2DPointArray); override;
+procedure DrawATPABitmap(bitmap: Integer; ATPA: T2DPointArray); override;
 begin
   Client.GetMBitmaps().GetBMP(bitmap).DrawATPA(ATPA);
 end;
 
-procedure DrawATPABitmapEx(bitmap : Integer; ATPA : T2DPointArray; Colors : TIntegerArray); override;
+procedure DrawATPABitmapEx(bitmap: Integer; ATPA: T2DPointArray; Colors: TIntegerArray); override;
 begin
   Client.GetMBitmaps().GetBMP(bitmap).DrawATPA(ATPA,Colors);
 end;
 
-procedure LineToBitmap(bitmap : Integer; Src,Dest: TPoint; Color : Integer);
+procedure LineToBitmap(bitmap: Integer; Src,Dest: TPoint; Color: Integer);
 begin
   Client.GetMBitmaps().GetBMP(Bitmap).LineTo(Src,Dest,Color);
 end;
@@ -327,12 +327,12 @@ begin;
   Client.GetMBitmaps().GetBMP(SourceBitmap).DrawTransparent(x,y,Client.GetMBitmaps().GetBMP(TargetBitmap));
 end;
 
-procedure SetTransparentColor(Bmp : Integer; Color : TColor); override;
+procedure SetTransparentColor(Bmp: Integer; Color : TColor); override;
 begin
   Client.GetMBitmaps().GetBMP(Bmp).SetTransparentColor(Color);
 end;
 
-function GetTransparentColor(Bmp : Integer) : TColor; override;
+function GetTransparentColor(Bmp: Integer) : TColor; override;
 begin;
   Result := Client.GetMBitmaps().GetBMP(bmp).GetTransparentColor;
 end;
@@ -363,30 +363,30 @@ begin
   Result := Client.GetMFinder().FindBitmapIn(Client.GetMBitmaps().GetBMP(bitmap),x,y,xs,ys,xe,ye);
 end;
 
-function FindBitmapToleranceIn(bitmap: Integer; var x, y: Integer; xs, ys, xe, ye: Integer; tolerance: Integer): Boolean; override;
+function FindBitmapToleranceIn(Bitmap: Integer; var x, y: Integer; xs, ys, xe, ye: Integer; tolerance: Integer): Boolean; override;
 begin
-  Result := Client.GetMFinder().FindBitmapToleranceIn(Client.GetMBitmaps().GetBMP(bitmap),x,y,xs,ys,xe,ye,tolerance);
+  Result := Client.GetMFinder().FindBitmapToleranceIn(Client.GetMBitmaps().GetBMP(Bitmap),x,y,xs,ys,xe,ye,tolerance);
 end;
 
 
-function FindBitmapSpiral(bitmap: Integer; var x, y: Integer; xs, ys, xe, ye: Integer): Boolean; override;
+function FindBitmapSpiral(Bitmap: Integer; var x, y: Integer; xs, ys, xe, ye: Integer): Boolean; override;
 begin
   Result := Client.GetMFinder().FindBitmapSpiral(Client.GetMBitmaps().GetBMP(bitmap),x,y,xs,ys,xe,ye);
 end;
 
-function FindBitmapsSpiralTolerance(bitmap: Integer; x, y: Integer; var Points : TPointArray; xs, ys, xe, ye,tolerance: Integer): Boolean; override;
+function FindBitmapsSpiralTolerance(Bitmap: Integer; x, y: Integer; var Points : TPointArray; xs, ys, xe, ye,tolerance: Integer): Boolean; override;
 begin
   MML_FINDER_THREADQUEUE.AcquireLock();
-  Result := Client.GetMFinder().FindBitmapsSpiralTolerance(Client.GetMBitmaps().GetBMP(bitmap),x,y,points,xs,ys,xe,ye,tolerance);
+  Result := Client.GetMFinder().FindBitmapsSpiralTolerance(Client.GetMBitmaps().GetBMP(Bitmap),x,y,points,xs,ys,xe,ye,tolerance);
   MML_FINDER_THREADQUEUE.ReleaseLock();
 end;
 
-function FindBitmapSpiralTolerance(bitmap: Integer; var x, y: Integer; xs, ys, xe, ye,tolerance : Integer): Boolean; override;
+function FindBitmapSpiralTolerance(Bitmap: Integer; var x, y: Integer; xs, ys, xe, ye,tolerance : Integer): Boolean; override;
 begin;
-  Result := Client.GetMFinder().FindBitmapSpiralTolerance(Client.GetMBitmaps().GetBMP(bitmap),x,y,xs,ys,xe,ye,tolerance);
+  Result := Client.GetMFinder().FindBitmapSpiralTolerance(Client.GetMBitmaps().GetBMP(Bitmap),x,y,xs,ys,xe,ye,tolerance);
 end;
 
-function RotateBitmap(bitmap: Integer; angle: Extended): Integer; override;
+function RotateBitmap(Bitmap: Integer; angle: Extended): Integer; override;
 begin 
   with Client.GetMBitmaps() do
   begin
@@ -423,7 +423,7 @@ begin;
   end;
 end;
 
-function BrightnessBitmap(Bitmap,br : Integer) : Integer; override;
+function BrightnessBitmap(Bitmap, br: Integer) : Integer; override;
 begin;
   with Client.GetMBitmaps() do
   begin;
@@ -431,7 +431,7 @@ begin;
     GetBmp(Bitmap).Brightness(GetBmp(result),br);
   end;
 end;
-function ContrastBitmap(bitmap : Integer; co : Extended) : Integer; override;
+function ContrastBitmap(bitmap: Integer; co: Extended) : Integer; override;
 begin;
   with Client.GetMBitmaps() do
   begin;
@@ -440,7 +440,7 @@ begin;
   end;
 end;
 
-function PosterizeBitmap(Bitmap : Integer; po : Integer) : Integer; override;
+function PosterizeBitmap(Bitmap: Integer; po: Integer) : Integer; override;
 begin;
   with Client.GetMBitmaps() do
   begin
@@ -449,7 +449,7 @@ begin;
   end;
 end;
 
-function CreateMaskFromBitmap(Bitmap : Integer) : TMask; override;
+function CreateMaskFromBitmap(Bitmap: Integer) : TMask; override;
 begin;
   Result := Client.GetMBitmaps().GetBMP(Bitmap).CreateTMask;
 end;
@@ -471,17 +471,17 @@ begin;
   result := Client.GetMFinder().FindDeformedBitmapToleranceIn(Client.GetMBitmaps().GetBMP(Bitmap),x,y,xs,ys,xe,ye,tolerance,range,AllowPartialAccuracy,accuracy);
 end;
 
-procedure RectangleBitmap(bitmap : Integer; const box : TBox; Color : TColor); override;
+procedure RectangleBitmap(bitmap: Integer; const box: TBox; Color: TColor); override;
 begin
   Client.GetMBitmaps().GetBMP(bitmap).Rectangle(box,Color);
 end;
 
-procedure FloodFillBitmap(bitmap : Integer; const StartPoint : TPoint; const SearchCol,ReplaceCol : TColor); override;
+procedure FloodFillBitmap(bitmap: Integer; const StartPoint: TPoint; const SearchCol,ReplaceCol: TColor); override;
 begin
   Client.GetMBitmaps().GetBMP(bitmap).FloodFill(startPoint,searchcol,replacecol);
 end;
 
-function ConvoluteBitmap(bitmap : Integer; matrix : T2DExtendedArray) : Integer; override;
+function ConvoluteBitmap(bitmap: Integer; matrix: T2DExtendedArray) : Integer; override;
 begin
   with Client.GetMBitmaps() do
   begin
@@ -490,26 +490,69 @@ begin
   end;
 end;
 
+function CalculatePixelShift(Bmp1,Bmp2: Integer; CompareBox: TBox) : Integer; override;
+var
+  x,y,w1,w2: Int32;
+  fdata1,fdata2: ^Int32;
+  MUF1,MUF2: TMufasaBitmap;
+begin
+  MUF1 := GetMufasaBitmap(BMP1);
+  MUF2 := GetMufasaBitmap(BMP2);
+
+  MUF1.ValidatePoint(comparebox.x1, comparebox.y1);
+  MUF1.ValidatePoint(comparebox.x2, comparebox.y2);
+  MUF2.ValidatePoint(comparebox.x1, comparebox.y1);
+  MUF2.ValidatePoint(comparebox.x2, comparebox.y2);
+  MUF1.SetAlphaValue(0);
+  MUF2.SetAlphaValue(0);
+  w1 := MUF1.GetWidth;
+  w2 := MUF2.GetWidth;
+  Result := 0;
+  FData1 := Pointer(MUF1.GetData);
+  FData2 := Pointer(MUF2.GetData);
+  
+  for y:=CompareBox.y1 to CompareBox.y2 do
+    for x:=CompareBox.x1 to CompareBox.x2 do
+      if FData1[y * w1 + x] <> FData2[y * w2 + x] then
+        Inc(Result);
+end;
+
+function CalculatePixelShiftTPA(Bmp1,Bmp2: Integer; CPoints: TPointArray): Integer; override;
+var
+  i,w1,w2: Int32;
+  fdata1,fdata2: ^Int32;
+  bounds: TBox;
+  MUF1,MUF2: TMufasaBitmap;
+begin
+  MUF1 := GetMufasaBitmap(BMP1);
+  MUF2 := GetMufasaBitmap(BMP2);
+
+  bounds := GetTPABounds(CPoints);
+  MUF1.ValidatePoint(bounds.x1, bounds.y1);
+  MUF1.ValidatePoint(bounds.x2, bounds.y2);
+  MUF2.ValidatePoint(bounds.x1, bounds.y1);
+  MUF2.ValidatePoint(bounds.x2, bounds.y2);
+  MUF1.SetAlphaValue(0);
+  MUF2.SetAlphaValue(0);
+  w1 := MUF1.GetWidth;
+  w2 := MUF2.GetWidth;
+  Result := 0;
+  FData1 := Pointer(MUF1.GetData);
+  FData2 := Pointer(MUF2.GetData);
+  
+  for i:=0 to High(CPoints) do
+      if FData1[CPoints[i].y * w1 + CPoints[i].x] <> FData2[CPoints[i].y * w2 + CPoints[i].x] then
+        Inc(Result);
+end;
+
 (*
-function CalculatePixelShift(Bmp1,Bmp2 : Integer; CompareBox : TBox) : Integer;override;
-begin
-  with Client.GetMBitmaps() do
-    result := CalculatePixelShift(GetBMP(bmp1),GetBMP(bmp2),comparebox);
-end;
-
-function CalculatePixelShiftTPA(Bmp1, Bmp2: Integer; CPoints: TPointArray): Integer;override;
-begin
-  with Client.GetMBitmaps() do
-    result := CalculatePixelShiftTPA(GetBMP(bmp1),GetBMP(bmp2),CPoints);
-end;
-
-function CalculatePixelTolerance(Bmp1,Bmp2 : Integer; CompareBox : TBox; CTS : Integer) : extended;override;
+function CalculatePixelTolerance(Bmp1,Bmp2 : Integer; CompareBox : TBox; CTS : Integer): extended; override;
 begin
   with Client.GetMBitmaps() do
     result := CalculatePixelTolerance(GetBMP(bmp1),GetBMP(bmp2),comparebox,cts);
 end;
 
-function CalculatePixelToleranceTPA(Bmp1,Bmp2 : Integer; CPoints: TPointArray; CTS : Integer) : extended;override;
+function CalculatePixelToleranceTPA(Bmp1,Bmp2 : Integer; CPoints: TPointArray; CTS : Integer): extended; override;
 begin
   with Client.GetMBitmaps() do
     result := CalculatePixelToleranceTPA(GetBMP(bmp1),GetBMP(bmp2),CPoints,cts);
