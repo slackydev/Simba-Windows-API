@@ -24,6 +24,42 @@ begin
 end; 
 
 
+// -----------------------------------------------------------------------------
+// WriteLn that works across threads (not really threadsafe tho)
+var __ThreadQueueStr: array of record TID:PtrUInt; TXT:string; end;
+procedure _write(str: String); override;
+var 
+  i:Int32;
+  TID: PtrUInt := GetCurrThreadID();
+begin
+  for i:=0 to High(__ThreadQueueStr) do
+    if __ThreadQueueStr[i].TID = TID then
+    begin
+      __ThreadQueueStr[i].TXT += str;
+      Exit;
+    end;
+  
+  i := Length(__ThreadQueueStr);
+  SetLength(__ThreadQueueStr, i+1);  
+  __ThreadQueueStr[i].TID := TID;
+  __ThreadQueueStr[i].TXT := str;
+end;
+
+procedure _writeln; override;
+var
+  i:Int32;
+  TID: PtrUInt := GetCurrThreadID();
+begin
+  for i:=0 to High(__ThreadQueueStr) do
+    if __ThreadQueueStr[i].TID = TID then
+    begin
+      client.WriteLn(__ThreadQueueStr[i].TXT);
+      __ThreadQueueStr[i].TXT := '';
+      Exit;
+    end;
+  client.WriteLn('');
+end;
+
 
 //------------------------------------------------------------------------------
 // MML misc
